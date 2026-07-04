@@ -1,0 +1,610 @@
+﻿@model HealthMSR.ViewModels.PatientDashboardViewModel
+@using HealthMSR.DAL.Enums
+@{
+    ViewData["Title"] = "Patient Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var p = Model.Patient;
+    var age = DateTime.Now.Year - p.DateOfBirth.Year;
+    var genderText = p.Gender == Gender.Male ? "Male" : "Female";
+}
+
+<div class="dashboard-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
+        </div>
+
+        <div class="sidebar-profile">
+            <div class="profile-avatar">@p.FirstName[0]</div>
+            <div class="profile-name">@p.FirstName @p.LastName</div>
+            <div class="profile-role">Patient</div>
+            <div class="profile-id">@p.NationalId</div>
+            <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
+                <span style="background:rgba(255,255,255,0.1); color:#e0f2fe; padding:3px 10px; border-radius:20px; font-size:0.75rem;">
+                    @(Model.MedicalRecord?.BloodType ?? "—")
+                </span>
+                <span style="background:rgba(255,255,255,0.1); color:#e0f2fe; padding:3px 10px; border-radius:20px; font-size:0.75rem;">
+                    @age yrs
+                </span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="@Url.Action("Dashboard", "Patient", new { section = "overview" })"
+               class="nav-item @(Model.ActiveSection == "overview" ? "active" : "")">Overview</a>
+            <a href="@Url.Action("Dashboard", "Patient", new { section = "records" })"
+               class="nav-item @(Model.ActiveSection == "records" ? "active" : "")">Medical Records</a>
+            <a href="@Url.Action("Dashboard", "Patient", new { section = "prescriptions" })"
+               class="nav-item @(Model.ActiveSection == "prescriptions" ? "active" : "")">Prescriptions</a>
+            <a href="@Url.Action("Dashboard", "Patient", new { section = "labs" })"
+               class="nav-item @(Model.ActiveSection == "labs" ? "active" : "")">Lab Results</a>
+            <a href="@Url.Action("Dashboard", "Patient", new { section = "radiology" })"
+               class="nav-item @(Model.ActiveSection == "radiology" ? "active" : "")">Radiology</a>
+            <a href="@Url.Action("Dashboard", "Patient", new { section = "vitals" })"
+               class="nav-item @(Model.ActiveSection == "vitals" ? "active" : "")">Vital Signs</a>
+            <a href="@Url.Action("Dashboard", "Patient", new { section = "profile" })"
+               class="nav-item @(Model.ActiveSection == "profile" ? "active" : "")">My Profile</a>
+        </nav>
+
+        <a href="@Url.Action("Logout", "Auth")" class="logout-btn">Logout</a>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <div class="topbar">
+            <h2 class="page-title">
+                @switch (Model.ActiveSection)
+                {
+                    case "overview":
+                        @($"Welcome, {p.FirstName} {p.LastName}")
+                        break;
+                    case "records":
+
+                        <text>Medical Records</text>
+                        break;
+                    case "prescriptions":
+
+                        <text>Prescriptions</text>
+                        break;
+                    case "labs":
+
+                        <text>Lab Results</text>
+                        break;
+                    case "radiology":
+
+                        <text>Radiology</text>
+                        break;
+                    case "vitals":
+
+                        <text>Vital Signs</text>
+                        break;
+                    case "profile":
+
+                        <text>My Profile</text>
+                        break;
+                }
+            </h2>
+        </div>
+
+        <div class="page-content">
+
+            @* ===== OVERVIEW ===== *@
+            @if (Model.ActiveSection == "overview")
+            {
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">📋</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.Encounters.Count</span>
+                            <span class="stat-label">Medical Records</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">💊</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.Prescriptions.Count</span>
+                            <span class="stat-label">Prescriptions</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">🧪</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.LabReports.Count</span>
+                            <span class="stat-label">Lab Results</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">🩻</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.RadiologyReports.Count</span>
+                            <span class="stat-label">Radiology</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Records Table -->
+                <div class="section-card">
+                    <h3 class="section-heading">Recent Medical Records</h3>
+                    @if (!Model.Encounters.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <p>No medical records yet</p>
+                            <span class="empty-hint">Your doctor will add records after your visit</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="overflow-x:auto;">
+                            <table class="rec-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Doctor</th>
+                                        <th>Diagnosis</th>
+                                        <th>Prescription</th>
+                                        <th>Labs</th>
+                                        <th>Radiology</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var enc in Model.Encounters.Take(5))
+                                    {
+                                        var rxList = Model.Prescriptions.Where(rx => rx.EncounterId == enc.EncounterId).ToList();
+                                        var labList = Model.LabReports.Where(l => l.EncounterId == enc.EncounterId).ToList();
+                                        var radList = Model.RadiologyReports.Where(r => r.EncounterId == enc.EncounterId).ToList();
+                                        <tr>
+                                            <td class="td-date">@enc.StartTime.ToString("yyyy-MM-dd")</td>
+                                            <td class="td-doctor">@enc.Doctor?.FullName</td>
+                                            <td class="td-diagnosis">@enc.Status</td>
+                                            <td>
+                                                @if (rxList.Any())
+                                                {
+                                                    @foreach (var rx in rxList)
+                                                    {
+                                                        @foreach (var item in rx.Items)
+                                                        {
+                                                            <span class="table-tag">💊 @item.Medication?.DrugName</span>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="td-empty">—</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (labList.Any())
+                                                {
+                                                    @foreach (var lab in labList)
+                                                    {
+                                                        <div class="table-tag-lab">🧪 @lab.TestName</div>
+                                                        <div class="table-result">@lab.Results</div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="td-empty">—</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (radList.Any())
+                                                {
+                                                    @foreach (var rad in radList)
+                                                    {
+                                                        <div class="table-tag-rad">🩻 @rad.ScanType</div>
+                                                        <div class="table-result">@(rad.Result ?? "Pending")</div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="td-empty">—</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+
+            @* ===== MEDICAL RECORDS ===== *@
+            @if (Model.ActiveSection == "records")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Medical Records</h3>
+                    @if (!Model.Encounters.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <p>No medical records yet</p>
+                            <span class="empty-hint">Your doctor will add records after your visit</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="overflow-x:auto;">
+                            <table class="rec-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Doctor</th>
+                                        <th>Diagnosis</th>
+                                        <th>Prescription</th>
+                                        <th>Labs</th>
+                                        <th>Radiology</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var enc in Model.Encounters)
+                                    {
+                                        var rxList = Model.Prescriptions.Where(rx => rx.EncounterId == enc.EncounterId).ToList();
+                                        var labList = Model.LabReports.Where(l => l.EncounterId == enc.EncounterId).ToList();
+                                        var radList = Model.RadiologyReports.Where(r => r.EncounterId == enc.EncounterId).ToList();
+                                        <tr>
+                                            <td class="td-date">@enc.StartTime.ToString("yyyy-MM-dd")</td>
+                                            <td class="td-doctor">Dr. @enc.Doctor?.FullName</td>
+                                            <td class="td-diagnosis">@enc.Status</td>
+                                            <td>
+                                                @if (rxList.Any())
+                                                {
+                                                    @foreach (var rx in rxList)
+                                                    {
+                                                        @foreach (var item in rx.Items)
+                                                        {
+                                                            <span class="table-tag">💊 @item.Medication?.DrugName @item.Dosage</span>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="td-empty">—</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (labList.Any())
+                                                {
+                                                    @foreach (var lab in labList)
+                                                    {
+                                                        <div class="table-tag-lab">@lab.TestName</div>
+                                                        <div class="table-result">@lab.Results</div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="td-empty">—</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (radList.Any())
+                                                {
+                                                    @foreach (var rad in radList)
+                                                    {
+                                                        <div class="table-tag-rad">@rad.ScanType</div>
+                                                        <div class="table-result">@(rad.Result ?? "Pending")</div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="td-empty">—</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="status-badge @(enc.Status == "Completed" ? "completed" : "pending")">
+                                                    @enc.Status
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+
+            @* ===== PRESCRIPTIONS ===== *@
+            @if (Model.ActiveSection == "prescriptions")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Prescriptions</h3>
+                    @if (!Model.Prescriptions.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">💊</div>
+                            <p>No prescriptions yet</p>
+                            <span class="empty-hint">Your doctor will add prescriptions after your visit</span>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var rx in Model.Prescriptions)
+                        {
+                            var isDispensed = rx.Dispenses?.Any(d => d.Status == DispenseStatus.Dispensed) ?? false;
+                            <div style="border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:16px; border-left:4px solid var(--teal); transition:0.3s;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                    <div>
+                                        <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--teal-dark);">
+                                            Dr. @rx.Encounter?.Doctor?.FullName
+                                        </div>
+                                        <div style="font-size:0.82rem; color:var(--gray); margin-top:2px;">
+                                            @rx.DatePrescribed.ToString("yyyy-MM-dd")
+                                        </div>
+                                    </div>
+                                    <span class="status-badge @(isDispensed ? "completed" : "pending")">
+                                        @(isDispensed ? "Dispensed" : "Pending")
+                                    </span>
+                                </div>
+                                <div style="display:flex; flex-direction:column; gap:8px;">
+                                    @foreach (var item in rx.Items)
+                                    {
+                                        <div style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--teal-light); border-radius:12px;">
+                                            <span style="font-size:1.2rem;">💊</span>
+                                            <div style="flex:1;">
+                                                <div style="font-weight:700; color:var(--dark);">@item.Medication?.DrugName</div>
+                                                <div style="font-size:0.82rem; color:var(--gray);">
+                                                    @item.Dosage — @item.Frequency — @item.Duration
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+
+            @* ===== LAB RESULTS ===== *@
+            @if (Model.ActiveSection == "labs")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Lab Results</h3>
+                    @if (!Model.LabReports.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">🧪</div>
+                            <p>No lab results yet</p>
+                            <span class="empty-hint">Results will appear here once uploaded by the lab</span>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var lab in Model.LabReports)
+                        {
+                            <div style="display:flex; align-items:center; gap:16px; padding:16px; border-radius:14px; border:1px solid var(--border); margin-bottom:12px; border-left:4px solid @(lab.Status == LabStatus.Completed ? "#10b981" : "var(--teal)"); transition:0.3s;">
+                                <div style="font-size:1.5rem;">🧪</div>
+                                <div style="flex:1;">
+                                    <div style="font-weight:600; color:var(--dark); font-size:0.95rem;">@lab.TestName</div>
+                                    <div style="font-size:0.82rem; color:var(--gray); margin-top:4px;">@lab.Results</div>
+                                </div>
+                                <span class="status-badge @(lab.Status == LabStatus.Completed ? "completed" : "pending")">
+                                    @lab.Status
+                                </span>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+
+            @* ===== RADIOLOGY ===== *@
+            @if (Model.ActiveSection == "radiology")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Radiology</h3>
+                    @if (!Model.RadiologyReports.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">🩻</div>
+                            <p>No radiology results yet</p>
+                            <span class="empty-hint">Results will appear here once uploaded</span>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var rad in Model.RadiologyReports)
+                        {
+                            <div style="border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:14px; border-left:4px solid @(rad.Status == "Ready" ? "#10b981" : "var(--teal)");">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                                    <div>
+                                        <div style="font-weight:700; color:var(--dark); font-size:1rem;">🩻 @rad.ScanType</div>
+                                        @if (!string.IsNullOrEmpty(rad.Result))
+                                        {
+                                            <div style="font-size:0.85rem; color:var(--gray); margin-top:4px;">Result: @rad.Result</div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(rad.Notes))
+                                        {
+                                            <div style="font-size:0.82rem; color:var(--gray);">Notes: @rad.Notes</div>
+                                        }
+                                        <div style="font-size:0.78rem; color:var(--gray);">@rad.RequestedDate.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                    <span class="status-badge @(rad.Status == "Ready" ? "completed" : "pending")">@rad.Status</span>
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(rad.ImageUrl))
+                                {
+                                    <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+                                        @if (rad.ImageUrl.EndsWith(".pdf"))
+                                        {
+                                            <a href="@rad.ImageUrl" target="_blank"
+                                                   style="display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:10px; background:var(--teal-light); color:var(--teal-dark); text-decoration:none; font-weight:600; font-size:0.85rem;">
+                                                📄 View PDF
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="@rad.ImageUrl" alt="Scan"
+                                                 style="max-width:100%; max-height:300px; border-radius:12px; cursor:pointer; border:1px solid var(--border);"
+                                                 onclick="window.open(this.src)" />
+                                        }
+                                        <!-- Print Button -->
+                                        <button onclick="printScan('@rad.ScanType', '@rad.Result', '@rad.Notes', '@rad.ImageUrl', '@p.FirstName @p.LastName', '@p.NationalId')"
+                                                style="padding:8px 16px; border-radius:10px; border:2px solid var(--teal); background:transparent; color:var(--teal-dark); font-weight:600; cursor:pointer; font-size:0.85rem;">
+                                            🖨️ Print
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            }
+
+            @* ===== VITAL SIGNS ===== *@
+            @if (Model.ActiveSection == "vitals")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Vital Signs</h3>
+                    @if (!Model.Observations.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">❤️</div>
+                            <p>No vital signs recorded yet</p>
+                            <span class="empty-hint">Your doctor will record vitals during your visit</span>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var obs in Model.Observations)
+                        {
+                            <div style="border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:14px;">
+                                <div style="font-size:0.82rem; color:var(--gray); font-weight:600; margin-bottom:14px;">
+                                    @obs.DateTime.ToString("yyyy-MM-dd") — Dr. @obs.Doctor?.FullName
+                                </div>
+                                <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px;">
+                                    <div style="background:var(--bg); border-radius:12px; padding:14px; text-align:center; border:1px solid var(--teal-light);">
+                                        <div style="font-size:0.75rem; color:var(--gray); font-weight:600; text-transform:uppercase; margin-bottom:6px;">@obs.Unit</div>
+                                        <div style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:var(--teal-dark);">@obs.Value</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+
+            @* ===== MY PROFILE ===== *@
+            @if (Model.ActiveSection == "profile")
+            {
+                <div class="section-card" style="text-align:center;">
+                    <div class="profile-avatar" style="width:100px; height:100px; font-size:3rem; margin:0 auto 16px; box-shadow:0 8px 24px rgba(14,165,233,0.3);">
+                        @p.FirstName[0]
+                    </div>
+                    <h2 style="font-family:'Cormorant Garamond',serif; font-size:2rem; color:var(--dark); margin-bottom:12px;">
+                        @p.FirstName @p.LastName
+                    </h2>
+                    <span class="status-badge completed">Patient</span>
+
+                    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:28px; text-align:left;">
+                        @foreach (var item in new[] {
+                            new { Label = "National ID", Value = p.NationalId },
+                            new { Label = "Blood Type", Value = Model.MedicalRecord?.BloodType ?? "—" },
+                            new { Label = "Age", Value = age + " years" },
+                            new { Label = "Date of Birth", Value = p.DateOfBirth.ToString("yyyy-MM-dd") },
+                            new { Label = "Gender",        Value = genderText },
+                            new { Label = "Phone", Value = p.Phone ?? "—" },
+                            new { Label = "Email", Value = p.Email ?? "—" }
+                        })
+                        {
+                            <div style="background:var(--bg); border-radius:12px; padding:16px 20px; border:1px solid var(--border);">
+                                <span style="display:block; font-size:0.75rem; color:var(--teal-dark); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">@item.Label</span>
+                                <span style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--dark);">@item.Value</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+    </main>
+</div>
+@section  Scripts{
+    <script>
+        function printScan(scanType, result, notes, imageUrl, patientName, nationalId) {
+
+            var win = window.open('', '_blank');
+
+            var imgContent = imageUrl.endsWith('.pdf')
+                ? `<a href="${imageUrl}" style="color:#0369a1;">Open PDF: ${imageUrl}</a>`
+                : `<img src="${imageUrl}" style="max-width:100%; border-radius:8px; margin-top:16px;" />`;
+
+            win.document.write(`
+                <html>
+                <head>
+                    <title>Radiology Report</title>
+
+                    <style>
+                        body{
+                            font-family:sans-serif;
+                            padding:40px;
+                            color:#0f172a;
+                        }
+
+                        h1{
+                            color:#0369a1;
+                            font-size:1.8rem;
+                            margin-bottom:8px;
+                        }
+
+                        .label{
+                            font-size:.75rem;
+                            font-weight:700;
+                            color:#64748b;
+                            text-transform:uppercase;
+                            letter-spacing:1px;
+                            margin-top:16px;
+                        }
+
+                        .value{
+                            font-size:1.1rem;
+                            font-weight:600;
+                            margin-top:4px;
+                        }
+
+                        hr{
+                            border:1px solid #e2e8f0;
+                            margin:20px 0;
+                        }
+                    </style>
+
+                </head>
+
+                <body>
+
+                    <h1>HealthMSR — Radiology Report</h1>
+
+                    <hr/>
+
+                    <div class="label">Patient Name</div>
+                    <div class="value">${patientName}</div>
+
+                    <div class="label">National ID</div>
+                    <div class="value">${nationalId}</div>
+
+                    <div class="label">Scan Type</div>
+                    <div class="value">${scanType}</div>
+
+                    <div class="label">Result</div>
+                    <div class="value">${result || '—'}</div>
+
+                    <div class="label">Notes</div>
+                    <div class="value">${notes || '—'}</div>
+
+                    <hr/>
+
+                    ${imgContent}
+
+                </body>
+                </html>
+            `);
+
+            win.document.close();
+            win.print();
+        }
+    </script>
+}

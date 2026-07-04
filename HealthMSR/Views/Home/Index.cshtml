@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="landing-wrap" id="app" dir="ltr">
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo-container">
+            <div>
+                <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
+                @* <img src="/images/logo.png" alt="HealthMSR" style="height:45px;" /> *@
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="nav-btn lang-btn" onclick="toggleLang()" id="langBtn">عربي</button>
+            <button class="nav-btn login-btn" onclick="document.getElementById('roleModal').style.display='flex'">
+                <span data-en="Login" data-ar="دخول">Login</span>
+            </button>
+        </div>
+    </header>
+
+    <h1 class="hero-title">
+        <span data-en="Your Health, Beautifully Managed" data-ar="صحتك، تدار بجمال واحترافية">
+            Your Health, Beautifully Managed
+        </span>
+    </h1>
+
+    <div class="services-container">
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500" alt="Doctor">
+            <div class="card-label"><span data-en="Doctor Clinic" data-ar=" الطبيب">Doctor</span></div>
+        </div>
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=500" alt="Pharmacy">
+            <div class="card-label"><span data-en="E-Pharmacy" data-ar="الصيدلية الذكية">E-Pharmacy</span></div>
+        </div>
+        <div class="service-card">
+            <img src="~/images/labimage.jpg" alt="Labs">
+            <div class="card-label"><span data-en="Smart Labs" data-ar="معامل ذكية">Smart Labs</span></div>
+        </div>
+        <div class="service-card">
+            <img src="~/images/xrayimage.jpg" alt="Radiology">
+            <div class="card-label"><span data-en="Digital X-Ray" data-ar="الأشعة الرقمية">Digital X-Ray</span></div>
+        </div>
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500" alt="History">
+            <div class="card-label"><span data-en="Patient History" data-ar="سجل المريض">Patient History</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Role Modal -->
+<div id="roleModal" class="overlay" style="display:none;" onclick="closeModal('roleModal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <h2 class="hero-title" style="font-size:2rem; margin:0 0 20px;">
+            <span data-en="Select Role" data-ar="اختار دورك">Select Role</span>
+        </h2>
+        <div class="role-grid">
+            <button class="role-item" onclick="selectRole('Patient')">
+                <span data-en="Patient" data-ar="مريض">Patient</span>
+            </button>
+            <button class="role-item" onclick="selectRole('Doctor')">
+                <span data-en="Doctor" data-ar="دكتور">Doctor</span>
+            </button>
+            <button class="role-item" onclick="selectRole('Pharmacy')">
+                <span data-en="Pharmacy" data-ar="صيدلي">Pharmacy</span>
+            </button>
+            <button class="role-item" onclick="selectRole('Lab')">
+                <span data-en="Lab" data-ar="معمل">Lab</span>
+            </button>
+            <button class="role-item" onclick="selectRole('Radiology')">
+                <span data-en="Radiology" data-ar="أشعة">Radiology</span>
+            </button>
+            <button class="role-item" onclick="selectRole('Admin')">
+                <span data-en="Admin" data-ar="مدير">Admin</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="overlay" style="display:none;" onclick="closeModal('loginModal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div style="text-align:center; margin-bottom:20px;">
+            <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
+        </div>
+        <h2 class="auth-title" id="loginTitle">Patient Login</h2>
+
+        <form action="/Auth/Login" method="post">
+            <input type="hidden" name="Role" id="roleInput" />
+
+            <div class="input-group">
+                <label><span data-en="National ID" data-ar="الرقم القومي">National ID</span></label>
+                <input type="text" name="NationalId" maxlength="14"
+                       placeholder="Enter your National ID" required />
+            </div>
+
+            <div class="input-group">
+                <label><span data-en="Password" data-ar="كلمة المرور">Password</span></label>
+                <input type="password" name="Password"
+                       placeholder="Enter your password" required />
+            </div>
+
+            <!-- <div style="text-align:right; margin-bottom:16px;">
+                <a href="#" style="color:var(--teal-dark); font-size:0.85rem; font-weight:600;">
+                    <span data-en="Forgot Password?" data-ar="نسيت كلمة المرور؟">Forgot Password?</span>
+                </a>
+            </div>-->
+            <div style="text-align:right; margin-bottom:16px;">
+                <a href="/Auth/ForgotPassword" style="color:var(--teal-dark); font-size:0.85rem; font-weight:600;">
+                    Forgot Password?
+                </a>
+            </div>
+            <button type="submit" class="btn-primary">
+                <span data-en="Login" data-ar="دخول">Login</span>
+            </button>
+        </form>
+
+        <div class="auth-link" style="margin-top:16px;">
+            <span data-en="Don't have an account?" data-ar="مش عندك حساب؟">Don't have an account?</span>
+            <a href="#" onclick="goToRegister()" style="color:var(--teal-dark); font-weight:700;">
+                <span data-en="Create Account" data-ar="إنشاء حساب">Create Account</span>
+            </a>
+        </div>
+
+        <div style="margin-top:12px; text-align:center;">
+            <a href="#" onclick="closeModal('loginModal'); document.getElementById('roleModal').style.display='flex';"
+                   style="color:var(--gray); font-size:0.85rem;">
+                <span data-en="← Back" data-ar="← رجوع">← Back</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
+        }
+
+        .modal-card {
+            background: white; padding: 40px; border-radius: 28px;
+            width: 100%; max-width: 480px;
+            box-shadow: 0 24px 64px rgba(14,165,233,0.2);
+        }
+
+        .role-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+
+        .role-item {
+            padding: 18px; border-radius: 16px;
+            border: 2px solid var(--border);
+            background: #f8fafc; font-weight: 600;
+            font-size: 1rem; cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: 0.3s; color: var(--dark);
+        }
+
+        .role-item:hover { background: var(--teal); color: white; border-color: var(--teal); }
+    </style>
+
+    <script>
+        var isArabic = false;
+        var selectedRole = '';
+
+        function toggleLang() {
+            isArabic = !isArabic;
+            var dir = isArabic ? 'rtl' : 'ltr';
+            document.getElementById('app').setAttribute('dir', dir);
+            document.getElementById('langBtn').textContent = isArabic ? 'English' : 'عربي';
+
+            document.querySelectorAll('[data-en]').forEach(function(el) {
+                el.textContent = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+            });
+        }
+
+        function selectRole(role) {
+            selectedRole = role;
+            document.getElementById('roleInput').value = role;
+            document.getElementById('loginTitle').textContent = role + ' Login';
+            document.getElementById('roleModal').style.display = 'none';
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function goToRegister() {
+            window.location.href = '/Auth/Register?role=' + selectedRole;
+        }
+    </script>
+}

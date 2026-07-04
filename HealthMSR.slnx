@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="HealthMSR/HealthMSR.csproj" />
+  <Project Path="HealthMSRBLL/HealthMSR.BLL.csproj" Id="d0a9b3f4-5404-43fa-839a-864798cf1114" />
+  <Project Path="HealthMSRDAL/HealthMSR.DAL.csproj" Id="d6b4a07e-79ba-4f33-a8b1-b06fc68cbc3c" />
+</Solution>

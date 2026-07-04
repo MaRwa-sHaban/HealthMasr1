@@ -1,0 +1,336 @@
+﻿@model HealthMSR.ViewModels.PharmacyDashboardViewModel
+@using HealthMSR.ViewModels
+@using HealthMSR.DAL.Enums
+@{
+    ViewData["Title"] = "Pharmacy Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ph = Model.Pharmacist;
+}
+
+<div class="dashboard-wrap">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
+        </div>
+        <div class="sidebar-profile">
+            <div class="profile-avatar">@ph.Name[0]</div>
+            <div class="profile-name">@ph.Name</div>
+            <div class="profile-role">Pharmacist</div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="@Url.Action("Dashboard", "Pharmacy", new { section = "overview" })"
+               class="nav-item @(Model.ActiveSection == "overview" ? "active" : "")">Overview</a>
+            <a href="@Url.Action("Dashboard", "Pharmacy", new { section = "pending" })"
+                   class="nav-item @(Model.ActiveSection == "pending" ? "active" : "")">
+                Pending Orders
+                @if (Model.PendingPrescriptions.Any())
+                {
+                    <span style="background:#ef4444; color:white; font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:auto;">
+                        @Model.PendingPrescriptions.Count
+                    </span>
+                }
+            </a>
+            <a href="@Url.Action("Dashboard", "Pharmacy", new { section = "search" })"
+               class="nav-item @(Model.ActiveSection == "search" ? "active" : "")">Search Patient</a>
+            <a href="@Url.Action("Dashboard", "Pharmacy", new { section = "profile" })"
+               class="nav-item @(Model.ActiveSection == "profile" ? "active" : "")">My Profile</a>
+        </nav>
+        <a href="@Url.Action("Logout", "Auth")" class="logout-btn">Logout</a>
+    </aside>
+
+    <main class="main-content">
+        <div class="topbar">
+            <h2 class="page-title">
+                @if (Model.ActiveSection == "overview")
+                {
+                    <text>Welcome, @ph.Name</text>
+                }
+                @if (Model.ActiveSection == "pending")
+                {
+                    <text>Pending Orders</text>
+                }
+                @if (Model.ActiveSection == "search")
+                {
+                    <text>Search Patient</text>
+                }
+                @if (Model.ActiveSection == "profile")
+                {
+                    <text>My Profile</text>
+                }
+            </h2>
+        </div>
+
+        <div class="page-content">
+
+            @* OVERVIEW *@
+            @if (Model.ActiveSection == "overview")
+            {
+                <!-- Stats -->
+                <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+                    <div class="stat-card">
+                        <div class="stat-icon orange">⏳</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.TotalPendingAll</span>
+                            <span class="stat-label">Total Pending</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.DispensedByMe</span>
+                            <span class="stat-label">Dispensed by Me</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">📅</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.DispensedTodayAll</span>
+                            <span class="stat-label">Dispensed Today (All)</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">🙋</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.DispensedTodayByMe</span>
+                            <span class="stat-label">Today by Me</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending -->
+                @if (Model.PendingPrescriptions.Any())
+                {
+                    <div class="section-card">
+                        <h3 class="section-heading">Awaiting Dispense</h3>
+                        @foreach (var item in Model.PendingPrescriptions)
+                        {
+                            <div style="border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; border-left:4px solid var(--teal);">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                                    <div>
+                                        <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600;">
+                                            @(item.Prescription.Encounter.Patient.FirstName + " " +
+              item.Prescription.Encounter.Patient.LastName)
+                                        </div>
+                                        <div style="font-size:0.78rem; color:var(--gray);">@item.Prescription.Encounter.Patient.NationalId</div>
+                                    </div>
+                                    <span style="font-size:0.82rem; color:var(--gray);">@item.Prescription.DatePrescribed.ToString("yyyy-MM-dd")</span>
+                                </div>
+                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+                                    @foreach (var med in item.Prescription.Items)
+                                    {
+                                        <span style="background:var(--teal-light); color:var(--teal-dark); padding:5px 14px; border-radius:20px; font-size:0.82rem; font-weight:500;">
+                                            @med.Medication?.DrugName @med.Dosage
+                                        </span>
+                                    }
+                                </div>
+                                <form asp-action="Dispense" asp-controller="Pharmacy" method="post" style="display:inline;">
+                                    <input type="hidden" name="prescriptionId" value="@item.Prescription.PrescriptionId" />
+                                    <input type="hidden" name="patientNationalId"
+                                           value="@item.Prescription.Encounter.Patient.NationalId" />
+                                    <button type="submit"
+                                            style="padding:10px 24px; border-radius:12px; border:none; background:linear-gradient(135deg,#059669,#10b981); color:white; font-weight:700; cursor:pointer;">
+                                        Confirm Dispense
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <!-- All Dispensed History -->
+                @if (Model.DispensedPrescriptions.Any())
+                {
+                    <div class="section-card">
+                        <h3 class="section-heading">All Dispensed Prescriptions</h3>
+                        <div style="overflow-x:auto;">
+                            <table class="rec-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Patient</th>
+                                        <th>Medications</th>
+                                        <th>Dispensed By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.DispensedPrescriptions)
+                                    {
+                                        <tr>
+                                            <td class="td-date">@item.DispensedDate.ToString("yyyy-MM-dd")</td>
+                                            <td style="font-family:'Cormorant Garamond',serif; font-weight:600;">@item.PatientName</td>
+                                            <td>
+                                                @foreach (var med in item.Prescription?.Items ?? new List<Prescription_Item>())
+                                                {
+                                                    <span style="background:var(--teal-light); color:var(--teal-dark); padding:2px 8px; border-radius:20px; font-size:0.78rem; margin:2px; display:inline-block;">
+                                                        @med.Medication?.DrugName
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span style="background:#d1fae5; color:#065f46; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:600;">
+                                                    ✅ @item.DispensedByName
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            }
+            @* PENDING *@
+            @if (Model.ActiveSection == "pending")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Pending Prescriptions</h3>
+                    @if (!Model.PendingPrescriptions.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">✅</div>
+                            <p>All prescriptions dispensed</p>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.PendingPrescriptions)
+                        {
+                            <div style="border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; border-left:4px solid var(--teal);">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                                    <div>
+                                        <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600;">
+                                            @(item.Prescription.Encounter.Patient.FirstName + " " +
+              item.Prescription.Encounter.Patient.LastName)
+                                        </div>
+                                        <div style="font-size:0.78rem; color:var(--gray);">@item.Prescription.Encounter.Patient.NationalId</div>
+                                    </div>
+                                    <span style="font-size:0.82rem; color:var(--gray);">@item.Prescription.DatePrescribed.ToString("yyyy-MM-dd")</span>
+                                </div>
+                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+                                    @foreach (var med in item.Prescription.Items)
+                                    {
+                                        <span style="background:var(--teal-light); color:var(--teal-dark); padding:5px 14px; border-radius:20px; font-size:0.82rem;">
+                                            @med.Medication?.DrugName @med.Dosage
+                                        </span>
+                                    }
+                                </div>
+                                <form asp-action="Dispense" asp-controller="Pharmacy" method="post" style="display:inline;">
+                                    <input type="hidden" name="prescriptionId" value="@item.Prescription.PrescriptionId" />
+                                    <input type="hidden" name="patientNationalId" value="@item.Prescription.Encounter.Patient.NationalId" />
+                                    <button type="submit" style="padding:10px 24px; border-radius:12px; border:none; background:linear-gradient(135deg,#059669,#10b981); color:white; font-weight:700; cursor:pointer;">
+                                        Confirm Dispense
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+
+            @* SEARCH *@
+            @if (Model.ActiveSection == "search")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Search by National ID</h3>
+                    <form method="get" asp-action="Dashboard" asp-controller="Pharmacy"
+                          style="display:flex; gap:12px;">
+                        <input type="hidden" name="section" value="search" />
+                        <input type="text" name="searchId" placeholder="Enter 14-digit National ID" maxlength="14"
+                               style="flex:1; padding:14px 18px; border-radius:12px; border:2px solid var(--border); font-size:1rem; outline:none;" />
+                        <button type="submit" class="btn-primary" style="width:auto; padding:14px 28px;">Search</button>
+                    </form>
+                    @if (!string.IsNullOrEmpty(Model.SearchError))
+                    {
+                        <div class="error-msg" style="margin-top:12px;">@Model.SearchError</div>
+                    }
+                </div>
+
+                @if (Model.SearchedPatient != null)
+                {
+                    var pat = Model.SearchedPatient;
+                    <div style="background:linear-gradient(135deg,#0f172a,#0369a1); border-radius:18px; padding:24px; display:flex; align-items:center; gap:20px; margin-bottom:20px;">
+                        <div class="profile-avatar" style="width:72px; height:72px; font-size:2.2rem;">@pat.FirstName[0]</div>
+                        <div>
+                            <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:white; margin-bottom:8px;">
+                                @pat.FirstName @pat.LastName
+                            </h2>
+                            <span style="background:rgba(255,255,255,0.15); color:#e0f2fe; padding:4px 12px; border-radius:20px; font-size:0.82rem;">@pat.NationalId</span>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <h3 class="section-heading">Prescriptions</h3>
+                        @if (!Model.PatientPrescriptions.Any())
+                        {
+                            <div class="empty-state">
+                                <div class="empty-icon">💊</div>
+                                <p>No prescriptions yet</p>
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var rx in Model.PatientPrescriptions)
+                            {
+                                var isDispensed = rx.Dispenses?.Any(d => d.Status == DispenseStatus.Dispensed) ?? false;
+                                <div style="border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; border-left:4px solid @(isDispensed ? "#10b981" : "var(--teal)");">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                                        <span style="font-size:0.82rem; color:var(--gray);">@rx.DatePrescribed.ToString("yyyy-MM-dd")</span>
+                                        <span class="status-badge @(isDispensed ? "completed" : "pending")">
+                                            @(isDispensed ? "Dispensed" : "Pending")
+                                        </span>
+                                    </div>
+                                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                                        @foreach (var item in rx.Items)
+                                        {
+                                            <span style="background:var(--teal-light); color:var(--teal-dark); padding:5px 14px; border-radius:20px; font-size:0.82rem;">
+                                                @item.Medication?.DrugName — @item.Dosage — @item.Frequency
+                                            </span>
+                                        }
+                                    </div>
+                                    @if (!isDispensed)
+                                    {
+                                        <form asp-action="Dispense" asp-controller="Pharmacy" method="post" style="display:inline;">
+                                            <input type="hidden" name="prescriptionId" value="@rx.PrescriptionId" />
+                                            <input type="hidden" name="patientNationalId" value="@pat.NationalId" />
+                                            <button type="submit" style="padding:10px 24px; border-radius:12px; border:none; background:linear-gradient(135deg,#059669,#10b981); color:white; font-weight:700; cursor:pointer;">
+                                                Confirm Dispense
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            }
+
+            @* PROFILE *@
+            @if (Model.ActiveSection == "profile")
+            {
+                <div class="section-card" style="text-align:center;">
+                    <div class="profile-avatar" style="width:100px; height:100px; font-size:3rem; margin:0 auto 16px; box-shadow:0 8px 24px rgba(14,165,233,0.3);">
+                        @ph.Name[0]
+                    </div>
+                    <h2 style="font-family:'Cormorant Garamond',serif; font-size:2rem; color:var(--dark); margin-bottom:12px;">@ph.Name</h2>
+                    <span class="status-badge completed">Pharmacist</span>
+
+                    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:28px; text-align:left;">
+                        @foreach (var item in new[] {
+                new { Label = "National ID",     Value = ph.NationalId ?? "—" },
+                new { Label = "License Number",  Value = ph.LicenceNumber.ToString() },
+                new { Label = "Phone",           Value = ph.Phone ?? "—" },
+                new { Label = "Email",           Value = ph.Email ?? "—" }
+            })
+                        {
+                            <div style="background:var(--bg); border-radius:12px; padding:16px 20px; border:1px solid var(--border);">
+                                <span style="display:block; font-size:0.75rem; color:var(--teal-dark); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">@item.Label</span>
+                                <span style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--dark);">@item.Value</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+    </main>
+</div>

@@ -1,0 +1,309 @@
+﻿@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = Context.Request.Query["role"].ToString();
+    if (string.IsNullOrEmpty(role)) role = "Patient";
+    var isPatient = role == "Patient";
+    var isDoctor = role == "Doctor";
+    var isRadiology = role == "Radiology";
+}
+
+<div class="auth-wrap">
+    <div class="auth-card" style="max-width:640px;">
+
+        <div style="text-align:center; margin-bottom:20px;">
+            <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
+        </div>
+
+        <h2 class="auth-title">Create Account</h2>
+        <p class="auth-sub">@role Registration</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-msg">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Register" asp-controller="Auth" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="Role" value="@role" />
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div class="input-group">
+                    <label>National ID <span style="color:#ef4444;">*</span></label>
+                    <input type="text" name="NationalId" placeholder="14-digit National ID"
+                           maxlength="14" minlength="14" pattern="\d{14}"
+                           title="Must be exactly 14 digits" required />
+                </div>
+
+                <div class="input-group">
+                    <label>Full Name <span style="color:#ef4444;">*</span></label>
+                    <input type="text" name="FullName" placeholder="Enter your full name" required />
+                </div>
+
+                <div class="input-group">
+                    <label>Phone <span style="color:#ef4444;">*</span></label>
+                    <input type="tel" name="Phone" placeholder="01xxxxxxxxx" required />
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" name="Email" placeholder="example@email.com" />
+                </div>
+
+                <div class="input-group">
+                    <label>Date of Birth <span style="color:#ef4444;">*</span></label>
+                    <input type="date" name="DateOfBirth" required />
+                </div>
+
+                @* فصيلة الدم للمريض فقط *@
+                @if (isPatient)
+                {
+                    <div class="input-group">
+                        <label>Blood Type <span style="color:#ef4444;">*</span></label>
+                        <select name="BloodType" required>
+                            <option value="">Select blood type</option>
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                        </select>
+                    </div>
+                }
+
+                @* تخصص للدكتور والمعمل والأشعة *@
+                @if (isDoctor || role == "Lab" || isRadiology)
+                {
+                    <div class="input-group @(isPatient ? "" : "")">
+                        <label>Specialty <span style="color:#ef4444;">*</span></label>
+                        @if (isDoctor)
+                        {
+                            <select name="Specialty" required>
+                                <option value="">Select Specialty</option>
+                                <option>General Practice</option>
+                                <option>Cardiology</option>
+                                <option>Orthopedics</option>
+                                <option>Pediatrics</option>
+                                <option>Neurology</option>
+                                <option>Dermatology</option>
+                                <option>Surgery</option>
+                                <option>Internal Medicine</option>
+                                <option>Gynecology</option>
+                                <option>Urology</option>
+                            </select>
+                        }
+                        else if (isRadiology)
+                        {
+                            <select name="Specialty" required>
+                                <option value="">Select Specialty</option>
+                                <option>General Radiology</option>
+                                <option>MRI Specialist</option>
+                                <option>CT Scan Specialist</option>
+                                <option>Ultrasound Specialist</option>
+                                <option>Nuclear Medicine</option>
+                                <option>Interventional Radiology</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <select name="Specialty" required>
+                                <option value="">Select Speciality</option>
+                                <option>General Lab</option>
+                                <option>Hematology</option>
+                                <option>Microbiology</option>
+                                <option>Biochemistry</option>
+                                <option>Pathology</option>
+                                <option>Immunology</option>
+                            </select>
+                        }
+                    </div>
+                }
+                @if (isDoctor)
+                {
+                    <div class="input-group">
+                        <label>License Number <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="LicenseNumber"
+                               placeholder="Medical license number" required />
+                    </div>
+                }
+
+                @if (isPatient)
+                {
+                    <div class="input-group">
+                        <label>Gender <span style="color:#ef4444;">*</span></label>
+                        <select name="Gender" required>
+                            <option value="">Select gender</option>
+                            <option value="0">Male</option>
+                            <option value="1">Female</option>
+                        </select>
+                    </div>
+                }
+                @if (!isPatient)
+                {
+                    <div class="input-group">
+                        <label>License Number <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="LicenseNumber"
+                               placeholder="@(isDoctor ? "Medical license number" : isRadiology ? "Radiology license number" : "Professional license number")"
+                               required />
+                    </div>
+                }
+
+                <div class="input-group">
+                    <label>Password <span style="color:#ef4444;">*</span></label>
+                    <input type="password" name="Password" placeholder="Min 6 characters"
+                           minlength="6" required />
+                </div>
+
+                <div class="input-group">
+                    <label>Confirm Password <span style="color:#ef4444;">*</span></label>
+                    <input type="password" name="ConfirmPassword" placeholder="Confirm password"
+                           minlength="6" required />
+                </div>
+            </div>
+
+            <!-- National ID Verification — للكل -->
+            <div style="background:var(--teal-light); border:1.5px solid var(--teal); border-radius:16px; padding:18px; margin-top:16px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+                    <span style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--teal-dark);">
+                        National ID Verification
+                    </span>
+                    <span style="font-size:0.75rem; color:var(--gray);">Images only (JPG/PNG), max 5MB</span>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+                    <div>
+                        <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1.5px solid var(--teal); background:white; cursor:pointer; font-size:0.82rem; font-weight:600; color:var(--teal-dark); overflow:hidden;">
+                            ↑ <span id="idFrontLabel" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Choose image</span>
+                            <input type="file" name="IdFront" accept="image/jpeg,image/png,image/jpg"
+                                   style="display:none;" onchange="updateLabel(this,'idFrontLabel')" />
+                        </label>
+                        <div style="font-size:0.75rem; color:var(--gray); text-align:center; margin-top:6px;">ID card — front</div>
+                    </div>
+                    <div>
+                        <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1.5px solid var(--teal); background:white; cursor:pointer; font-size:0.82rem; font-weight:600; color:var(--teal-dark); overflow:hidden;">
+                            ↑ <span id="idBackLabel" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Choose image</span>
+                            <input type="file" name="IdBack" accept="image/jpeg,image/png,image/jpg"
+                                   style="display:none;" onchange="updateLabel(this,'idBackLabel')" />
+                        </label>
+                        <div style="font-size:0.75rem; color:var(--gray); text-align:center; margin-top:6px;">ID card — back</div>
+                    </div>
+                    <div>
+                        <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1.5px solid var(--teal); background:white; cursor:pointer; font-size:0.82rem; font-weight:600; color:var(--teal-dark); overflow:hidden;">
+                            ↑ <span id="selfieLabel" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Choose image</span>
+                            <input type="file" name="Selfie" accept="image/jpeg,image/png,image/jpg"
+                                   style="display:none;" onchange="updateLabel(this,'selfieLabel')" />
+                        </label>
+                        <div style="font-size:0.75rem; color:var(--gray); text-align:center; margin-top:6px;">Selfie with ID</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Work License — للطاقم الطبي فقط -->
+            @if (!isPatient)
+            {
+                <div style="background:#eff6ff; border:1.5px solid #93c5fd; border-radius:16px; padding:18px; margin-top:12px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+                        <span style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:#1d4ed8;">
+                            Professional Documents
+                        </span>
+                        <span style="font-size:0.75rem; color:var(--gray);">PDF files only</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div>
+                            <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1.5px solid #93c5fd; background:white; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1d4ed8; overflow:hidden;">
+                                ↑ <span id="licenseLabel" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Choose PDF</span>
+                                <input type="file" name="License"
+                                       accept=".pdf,application/pdf"
+                                       style="display:none;" onchange="updateLabel(this,'licenseLabel')" />
+                            </label>
+                            <div style="font-size:0.75rem; color:var(--gray); text-align:center; margin-top:6px;">Work License (PDF)</div>
+                        </div>
+                        <div>
+                            <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1.5px solid #93c5fd; background:white; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1d4ed8; overflow:hidden;">
+                                ↑ <span id="profCardLabel" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Choose PDF</span>
+                                <input type="file" name="ProfCard"
+                                       accept=".pdf,application/pdf"
+                                       style="display:none;" onchange="updateLabel(this,'profCardLabel')" />
+                            </label>
+                            <div style="font-size:0.75rem; color:var(--gray); text-align:center; margin-top:6px;">Professional ID (PDF)</div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Note -->
+            <div style="background:var(--teal-light); border:1px solid var(--teal); border-radius:12px; padding:14px 18px; font-size:0.82rem; color:var(--teal-dark); margin-top:12px; font-weight:500;">
+                ⚠️ Make sure your National ID number and Date of Birth match exactly what's on your ID card. Mismatches will result in rejection.
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top:16px;" id="submitBtn">
+                Create Account
+            </button>
+        </form>
+
+        <div class="auth-link" style="margin-top:16px;">
+            Already have an account?
+            <a href="javascript:history.back()" style="color:var(--teal-dark); font-weight:700;">Login</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateLabel(input, labelId) {
+            var label = document.getElementById(labelId);
+            if (input.files && input.files[0]) {
+                var file = input.files[0];
+                // Check file type
+                var isPdf = input.accept.includes('pdf');
+                if (isPdf && !file.name.toLowerCase().endsWith('.pdf')) {
+                    alert('Please upload a PDF file only.');
+                    input.value = '';
+                    label.textContent = 'Choose PDF';
+                    label.style.color = '#1d4ed8';
+                    return;
+                }
+                // Check size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB.');
+                    input.value = '';
+                    return;
+                }
+                label.textContent = '✓ ' + file.name;
+                label.style.color = '#059669';
+            }
+        }
+
+        // Validate National ID
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var nidInput = document.querySelector('input[name="NationalId"]');
+            var nid = nidInput.value.trim();
+            if (!/^\d{14}$/.test(nid)) {
+                e.preventDefault();
+                alert('National ID must be exactly 14 digits.');
+                nidInput.focus();
+                return;
+            }
+
+            var dobInput = document.querySelector('input[name="DateOfBirth"]');
+            if (dobInput && dobInput.value) {
+                // Extract birth year from National ID
+                var century = nid[0] === '2' ? '19' : '20';
+                var yearFromId = century + nid.substring(1, 3);
+                var monthFromId = nid.substring(3, 5);
+                var dayFromId = nid.substring(5, 7);
+                var dateFromId = yearFromId + '-' + monthFromId + '-' + dayFromId;
+
+                var enteredDob = dobInput.value; // yyyy-MM-dd
+
+                if (dateFromId !== enteredDob) {
+                    e.preventDefault();
+                    alert('Date of Birth does not match your National ID number. Please check both fields.');
+                    dobInput.focus();
+                    return;
+                }
+            }
+        });
+    </script>
+}

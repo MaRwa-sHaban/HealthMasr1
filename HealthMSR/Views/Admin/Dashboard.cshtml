@@ -1,0 +1,727 @@
+﻿@model HealthMSR.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
+        </div>
+        <div class="sidebar-profile">
+            <div class="profile-avatar">A</div>
+            <div class="profile-name">Admin</div>
+            <div class="profile-role">System Administrator</div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="@Url.Action("Dashboard", "Admin", new { section = "overview" })"
+               class="nav-item @(Model.ActiveSection == "overview" ? "active" : "")">Overview</a>
+            <a href="@Url.Action("Dashboard", "Admin", new { section = "doctors" })"
+                   class="nav-item @(Model.ActiveSection == "doctors" ? "active" : "")">
+                Doctors
+                <span style="background:rgba(255,255,255,0.15);color:#e0f2fe;padding:2px 8px;border-radius:20px;font-size:0.72rem;margin-left:auto;">@Model.TotalDoctors</span>
+            </a>
+            <a href="@Url.Action("Dashboard", "Admin", new { section = "pharmacy" })"
+                   class="nav-item @(Model.ActiveSection == "pharmacy" ? "active" : "")">
+                Pharmacists
+                <span style="background:rgba(255,255,255,0.15);color:#e0f2fe;padding:2px 8px;border-radius:20px;font-size:0.72rem;margin-left:auto;">@Model.TotalPharmacists</span>
+            </a>
+            <a href="@Url.Action("Dashboard", "Admin", new { section = "lab" })"
+                   class="nav-item @(Model.ActiveSection == "lab" ? "active" : "")">
+                Lab Technicians
+                <span style="background:rgba(255,255,255,0.15);color:#e0f2fe;padding:2px 8px;border-radius:20px;font-size:0.72rem;margin-left:auto;">@Model.TotalLabTechs</span>
+            </a>
+            <a href="@Url.Action("Dashboard", "Admin", new { section = "patients" })"
+                   class="nav-item @(Model.ActiveSection == "patients" ? "active" : "")">
+                Patients
+                <span style="background:rgba(255,255,255,0.15);color:#e0f2fe;padding:2px 8px;border-radius:20px;font-size:0.72rem;margin-left:auto;">@Model.TotalPatients</span>
+            </a>
+            <a href="@Url.Action("Dashboard", "Admin", new { section = "radiology" })"
+                   class="nav-item @(Model.ActiveSection == "radiology" ? "active" : "")">
+                Radiologists
+                <span style="background:rgba(255,255,255,0.15);color:#e0f2fe;padding:2px 8px;border-radius:20px;font-size:0.72rem;margin-left:auto;">
+                    @Model.TotalRadiologists
+                </span>
+            </a>
+        </nav>
+        <a href="@Url.Action("Logout", "Auth")" class="logout-btn">Logout</a>
+    </aside>
+
+    <main class="main-content">
+        <div class="topbar">
+            <h2 class="page-title">
+                @switch (Model.ActiveSection)
+                {
+                    case "overview":
+                        <text>Admin Dashboard</text>
+                        break;
+                    case "doctors":
+
+                        <text>Doctors Management</text>
+                        break;
+                    case "pharmacy":
+
+                        <text>Pharmacists Management</text>
+                        break;
+                    case "lab":
+
+                        <text>Lab Technicians Management</text>
+                        break;
+                    case "patients":
+
+                        <text>Patients</text>
+                        break;
+                }
+            </h2>
+        </div>
+
+        <div class="page-content">
+
+            @* OVERVIEW *@
+            @if (Model.ActiveSection == "overview")
+            {
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">👥</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.TotalPatients</span>
+                            <span class="stat-label">Total Patients</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">👨‍⚕️</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.TotalDoctors</span>
+                            <span class="stat-label">Total Doctors</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">💊</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.TotalPharmacists</span>
+                            <span class="stat-label">Pharmacists</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">🧪</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.TotalLabTechs</span>
+                            <span class="stat-label">Lab Technicians</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">🩻</div>
+                        <div class="stat-info">
+                            <span class="stat-num">@Model.TotalRadiologists</span>
+                            <span class="stat-label">Radiologists</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3 class="section-heading">Quick Actions</h3>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+                        <a href="@Url.Action("Dashboard", "Admin", new { section = "doctors" })"
+                               style="background:var(--teal-light); border-radius:14px; padding:20px; text-align:center; text-decoration:none; border:1px solid var(--teal); transition:0.3s; display:block;">
+                            <div style="font-size:2rem; margin-bottom:8px;">👨‍⚕️</div>
+                            <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--teal-dark);">Manage Doctors</div>
+                        </a>
+                        <a href="@Url.Action("Dashboard", "Admin", new { section = "pharmacy" })"
+                               style="background:#ede9fe; border-radius:14px; padding:20px; text-align:center; text-decoration:none; border:1px solid #8b5cf6; transition:0.3s; display:block;">
+                            <div style="font-size:2rem; margin-bottom:8px;">💊</div>
+                            <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:#6d28d9;">Manage Pharmacists</div>
+                        </a>
+                        <a href="@Url.Action("Dashboard", "Admin", new { section = "lab" })"
+                               style="background:#fef3c7; border-radius:14px; padding:20px; text-align:center; text-decoration:none; border:1px solid #f59e0b; transition:0.3s; display:block;">
+                            <div style="font-size:2rem; margin-bottom:8px;">🧪</div>
+                            <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:#92400e;">Manage Lab Techs</div>
+                        </a>
+                        <a href="@Url.Action("Dashboard", "Admin", new { section = "radiology" })"
+                               style="background:#fce7f3; border-radius:14px; padding:20px; text-align:center; text-decoration:none; border:1px solid #ec4899; transition:0.3s; display:block;">
+                            <div style="font-size:2rem; margin-bottom:8px;">🩻</div>
+                            <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:#be185d;">Manage Radiologists</div>
+                        </a>
+                        <a href="@Url.Action("Dashboard", "Admin", new { section = "patients" })"
+                               style="background:#f0fdf4; border-radius:14px; padding:20px; text-align:center; text-decoration:none; border:1px solid #10b981; transition:0.3s; display:block;">
+                            <div style="font-size:2rem; margin-bottom:8px;">👥</div>
+                            <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:#065f46;">View Patients</div>
+                        </a>
+                    </div>
+                </div>
+            }
+            @* DOCTORS *@
+            @if (Model.ActiveSection == "doctors")
+            {
+                <!-- Filter by Specialty -->
+                <div class="section-card">
+                    <h3 class="section-heading">Filter & Search</h3>
+                    <form method="get" asp-action="Dashboard" style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <input type="hidden" name="section" value="doctors" />
+                        <select name="specialty"
+                                style="padding:12px 16px; border-radius:12px; border:2px solid var(--border); font-size:0.95rem; outline:none; background:#f8fafc;">
+                            <option value="">All Specialties</option>
+                            @foreach (var spec in Model.Doctors.Select(d => d.Specialty).Distinct())
+                            {
+                                <option value="@spec" selected="@(Model.FilterSpecialty == spec)">@spec</option>
+                            }
+                        </select>
+                        <input type="text" name="search" value="@Model.SearchQuery"
+                               placeholder="Search by name or license..."
+                               style="flex:1; padding:12px 16px; border-radius:12px; border:2px solid var(--border); font-size:0.95rem; outline:none;" />
+                        <button type="submit" class="btn-primary" style="width:auto; padding:12px 24px;">Search</button>
+                    </form>
+                </div>
+
+                <!-- Add Doctor Form -->
+                <div class="section-card">
+                    <h3 class="section-heading">Add New Doctor</h3>
+                    <form asp-action="AddDoctor" asp-controller="Admin" method="post">
+                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:16px;">
+                            <div class="input-group">
+                                <label>Full Name</label>
+                                <input type="text" name="FullName" placeholder="Dr. Ahmed Mohamed" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Specialty</label>
+                                <select name="Specialty" required>
+                                    <option value="">Select Specialty</option>
+                                    <option>General Practice</option>
+                                    <option>Cardiology</option>
+                                    <option>Orthopedics</option>
+                                    <option>Pediatrics</option>
+                                    <option>Neurology</option>
+                                    <option>Dermatology</option>
+                                    <option>Radiology</option>
+                                    <option>Laboratory Medicine</option>
+                                    <option>Surgery</option>
+                                    <option>Internal Medicine</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>License Number</label>
+                                <input type="text" name="LicenseNumber" placeholder="License #" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Default Password <span style="color:#ef4444;">*</span></label>
+                                <input type="password" name="Password" placeholder="Set login password" required />
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-bottom:16px;">
+                            <label>Organization</label>
+                            <select name="OrganizationId" required>
+                                @foreach (var org in Model.Organizations)
+                                {
+                                    <option value="@org.OrganizationId">@org.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:auto; padding:12px 28px;">Add Doctor</button>
+                    </form>
+                </div>
+
+                <!-- Doctors Table -->
+                <div class="section-card">
+                    <h3 class="section-heading">
+                        Doctors (@Model.Doctors.Count)
+                        @if (!string.IsNullOrEmpty(Model.FilterSpecialty))
+                        {
+                            <span style="font-size:0.9rem; color:var(--gray); font-family:'Plus Jakarta Sans',sans-serif;"> — @Model.FilterSpecialty</span>
+                        }
+                    </h3>
+                    @if (!Model.Doctors.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">👨‍⚕️</div>
+                            <p>No doctors found</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="overflow-x:auto;">
+                            <table class="rec-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Specialty</th>
+                                        <th>License</th>
+                                        <th>Organization</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var doc in Model.Doctors)
+                                    {
+                                        <tr>
+                                            <td class="td-date">@doc.PractitionerId</td>
+                                            <td style="font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600;">Dr. @doc.FullName</td>
+                                            <td>
+                                                <span style="background:var(--teal-light); color:var(--teal-dark); padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600;">
+                                                    @doc.Specialty
+                                                </span>
+                                            </td>
+                                            <td class="td-doctor">@doc.LicenseNumber</td>
+                                            <td class="td-doctor">@doc.Organization?.Name</td>
+                                            <td>
+                                                <form asp-action="DeleteDoctor" asp-controller="Admin" method="post" style="display:inline;"
+                                                      onsubmit="return confirm('Delete Dr. @doc.FullName?')">
+                                                    <input type="hidden" name="id" value="@doc.PractitionerId" />
+                                                    <button type="submit"
+                                                            style="padding:6px 14px; border-radius:8px; border:none; background:#fee2e2; color:#ef4444; font-weight:600; cursor:pointer; font-size:0.82rem;">
+                                                        Delete
+                                                    </button>
+                                                    <!-- Edit Button -->
+                                                    <!--<button type="button"
+                                                            onclick="openEditModal(@doc.PractitionerId, '@doc.FullName', '@doc.Specialty', '@doc.LicenseNumber')"
+                                                            style="padding:6px 14px; border-radius:8px; border:none; background:#dbeafe; color:#1d4ed8; font-weight:600; cursor:pointer; font-size:0.82rem; margin-right:6px;">
+                                                        Edit
+                                                    </button>-->
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+
+            @* PHARMACISTS *@
+            @if (Model.ActiveSection == "pharmacy")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Add New Pharmacist</h3>
+                    <form asp-action="AddPharmacist" asp-controller="Admin" method="post">
+                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:16px;">
+                            <div class="input-group">
+                                <label>Full Name</label>
+                                <input type="text" name="Name" placeholder="Full name" required />
+                            </div>
+                            <div class="input-group">
+                                <label>National ID</label>
+                                <input type="text" name="NationalId" maxlength="14" placeholder="14-digit ID" required />
+                            </div>
+                            <div class="input-group">
+                                <label>License Number</label>
+                                <input type="text" name="LicenseNum" placeholder="Pharmacy license" />
+                            </div>
+                            <div class="input-group">
+                                <label>Phone</label>
+                                <input type="tel" name="Phone" placeholder="01xxxxxxxxx" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Email</label>
+                                <input type="email" name="Email" placeholder="email@example.com" />
+                            </div>
+                            <div class="input-group">
+                                <label>Default Password</label>
+                                <input type="password" name="Password" placeholder="Set password" required />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:auto; padding:12px 28px;">Add Pharmacist</button>
+                    </form>
+                </div>
+
+                <div class="section-card">
+                    <h3 class="section-heading">Pharmacists (@Model.Pharmacists.Count)</h3>
+                    @if (!Model.Pharmacists.Any())
+                    {
+                        <div class="empty-state"><div class="empty-icon">💊</div><p>No pharmacists yet</p></div>
+                    }
+                    else
+                    {
+                        <table class="rec-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ph in Model.Pharmacists)
+                                {
+                                    <tr>
+                                        <td style="font-family:'Cormorant Garamond',serif; font-weight:600;">@ph.Name</td>
+                                        <td class="td-doctor">@ph.Phone</td>
+                                        <td class="td-doctor">@(ph.Email ?? "—")</td>
+                                        <td>
+                                            <!--  <button onclick="openEditPhModal(@ph.Id, '@ph.Name', '@ph.Phone', '@(ph.Email ?? "")')"
+                                                    style="padding:6px 14px; border-radius:8px; border:none; background:#dbeafe; color:#1d4ed8; font-weight:600; cursor:pointer; font-size:0.82rem; margin-right:6px;">
+                                                Edit
+                                            </button>-->
+                                            <form asp-action="DeletePharmacist" asp-controller="Admin" method="post" style="display:inline;"
+                                                  onsubmit="return confirm('Delete @ph.Name?')">
+                                                <input type="hidden" name="id" value="@ph.Id" />
+                                                <button type="submit"
+                                                        style="padding:6px 14px; border-radius:8px; border:none; background:#fee2e2; color:#ef4444; font-weight:600; cursor:pointer; font-size:0.82rem;">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+                <!-- Edit Pharmacist Modal -->
+                <div id="editPhModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+                    <div style="background:white; border-radius:20px; padding:36px; width:500px;">
+                        <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--teal-dark); margin-bottom:20px;">Edit Pharmacist</h3>
+                        <form asp-action="EditPharmacist" asp-controller="Admin" method="post">
+                            <input type="hidden" name="Id" id="editPhId" />
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+                                <div class="input-group">
+                                    <label>Full Name</label>
+                                    <input type="text" name="Name" id="editPhName" required />
+                                </div>
+                                <div class="input-group">
+                                    <label>Phone</label>
+                                    <input type="text" name="Phone" id="editPhPhone" />
+                                </div>
+                                <div class="input-group">
+                                    <label>Email</label>
+                                    <input type="email" name="Email" id="editPhEmail" />
+                                </div>
+                                <div class="input-group">
+                                    <label>New Password (optional)</label>
+                                    <input type="password" name="Password" placeholder="Leave empty to keep" />
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                                <button type="button" onclick="document.getElementById('editPhModal').style.display='none'"
+                                        style="padding:10px 20px; border-radius:10px; border:2px solid var(--border); background:transparent; cursor:pointer;">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px;">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            @* LAB TECHNICIANS *@
+            @if (Model.ActiveSection == "lab")
+            {
+                <!-- Add Lab Tech -->
+                <div class="section-card">
+                    <h3 class="section-heading">Add New Lab Technician</h3>
+                    <form asp-action="AddLabTech" asp-controller="Admin" method="post">
+                        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:16px;">
+                            <div class="input-group">
+                                <label>Full Name</label>
+                                <input type="text" name="Name" placeholder="Full name" required />
+                            </div>
+                            <div class="input-group">
+                                <label>National ID</label>
+                                <input type="text" name="NationalId" maxlength="14" placeholder="14-digit ID" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Phone</label>
+                                <input type="tel" name="Phone" placeholder="01xxxxxxxxx" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Email</label>
+                                <input type="email" name="Email" placeholder="email@example.com" />
+                            </div>
+                            <div class="input-group">
+                                <label>Default Password <span style="color:#ef4444;">*</span></label>
+                                <input type="password" name="Password" placeholder="Set login password" required />
+                            </div>
+                            <div class="input-group" style="grid-column:span 2;">
+                                <label>Speciality</label>
+                                <select name="Speciality">
+                                    <option value="General Lab">General Lab</option>
+                                    <option value="Hematology">Hematology</option>
+                                    <option value="Microbiology">Microbiology</option>
+                                    <option value="Biochemistry">Biochemistry</option>
+                                    <option value="Pathology">Pathology</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:auto; padding:12px 28px;">Add Lab Technician</button>
+                    </form>
+                </div>
+
+                <!-- Lab Techs Table -->
+                <div class="section-card">
+                    <h3 class="section-heading">Lab Technicians (@Model.LabTechnicians.Count)</h3>
+                    @if (!Model.LabTechnicians.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">🧪</div>
+                            <p>No lab technicians yet</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="overflow-x:auto;">
+                            <table class="rec-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Speciality</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var lt in Model.LabTechnicians)
+                                    {
+                                        <tr>
+                                            <td class="td-date">@lt.Id</td>
+                                            <td style="font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600;">@lt.Name</td>
+                                            <td>
+                                                <span style="background:#fef3c7; color:#92400e; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600;">
+                                                    @lt.Speciality
+                                                </span>
+                                            </td>
+                                            <td class="td-doctor">@lt.Phone</td>
+                                            <td class="td-doctor">@(lt.Email ?? "—")</td>
+                                            <td>
+                                                <form asp-action="DeleteLabTech" asp-controller="Admin" method="post" style="display:inline;"
+                                                      onsubmit="return confirm('Delete @lt.Name?')">
+                                                  
+                                                    <!--<div class="input-group">
+                                                        <label>National ID</label>
+                                                        <input type="text" name="NationalId" maxlength="14" placeholder="14-digit ID" required />
+                                                    </div>-->
+                                                    <button type="submit"
+                                                            style="padding:6px 14px; border-radius:8px; border:none; background:#fee2e2; color:#ef4444; font-weight:600; cursor:pointer; font-size:0.82rem;">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+            @if (Model.ActiveSection == "radiology")
+            {
+                <!-- Add Radiologist -->
+                <div class="section-card">
+                    <h3 class="section-heading">Add New Radiologist</h3>
+                    <form asp-action="AddRadiologist" asp-controller="Admin" method="post">
+                        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:16px;">
+                            <div class="input-group">
+                                <label>Full Name</label>
+                                <input type="text" name="FullName" placeholder="Full name" required />
+                            </div>
+                            <div class="input-group">
+                                <label>National ID</label>
+                                <input type="text" name="NationalId" maxlength="14" placeholder="14-digit ID" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Phone</label>
+                                <input type="tel" name="Phone" placeholder="01xxxxxxxxx" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Email</label>
+                                <input type="email" name="Email" placeholder="email@example.com" />
+                            </div>
+                            <div class="input-group">
+                                <label>Default Password <span style="color:#ef4444;">*</span></label>
+                                <input type="password" name="Password" placeholder="Set login password" required />
+                            </div>
+                            <div class="input-group" style="grid-column:span 2;">
+                                <label>Specialty</label>
+                                <select name="Specialty">
+                                    <option>General Radiology</option>
+                                    <option>MRI Specialist</option>
+                                    <option>CT Scan Specialist</option>
+                                    <option>Ultrasound Specialist</option>
+                                    <option>Nuclear Medicine</option>
+                                    <option>Interventional Radiology</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:auto; padding:12px 28px;">Add Radiologist</button>
+                    </form>
+                </div>
+
+                <!-- Radiologists Table -->
+                <div class="section-card">
+                    <h3 class="section-heading">Radiologists (@Model.TotalRadiologists)</h3>
+                    @if (!Model.Radiologists.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">🩻</div>
+                            <p>No radiologists yet</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="overflow-x:auto;">
+                            <table class="rec-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Specialty</th>
+                                        <th>National ID</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var rad in Model.Radiologists)
+                                    {
+                                        <tr>
+                                            <td class="td-date">@rad.Id</td>
+                                            <td style="font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600;">@rad.FullName</td>
+                                            <td>
+                                                <span style="background:#fef3c7; color:#92400e; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600;">
+                                                    @rad.Specialty
+                                                </span>
+                                            </td>
+                                            <td class="td-doctor">@rad.NationalId</td>
+                                            <td class="td-doctor">@rad.Phone</td>
+                                            <td class="td-doctor">@(rad.Email ?? "—")</td>
+                                            <td>
+                                                <form asp-action="DeleteRadiologist" asp-controller="Admin" method="post"
+                                                      style="display:inline;" onsubmit="return confirm('Delete @rad.FullName?')">
+                                                    <input type="hidden" name="id" value="@rad.Id" />
+                                                    <button type="submit"
+                                                            style="padding:6px 14px; border-radius:8px; border:none; background:#fee2e2; color:#ef4444; font-weight:600; cursor:pointer; font-size:0.82rem;">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+            @* PATIENTS *@
+            @if (Model.ActiveSection == "patients")
+            {
+                <div class="section-card">
+                    <h3 class="section-heading">Patients (@Model.TotalPatients)</h3>
+                    @if (!Model.Patients.Any())
+                    {
+                        <div class="empty-state">
+                            <div class="empty-icon">👥</div>
+                            <p>No patients registered yet</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="overflow-x:auto;">
+                            <table class="rec-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>National ID</th>
+                                        <th>Blood Type</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var pat in Model.Patients)
+                                    {
+                                        <tr>
+                                            <td class="td-date">@pat.PatientId</td>
+                                            <td style="font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600;">
+                                                @pat.FirstName @pat.LastName
+                                            </td>
+                                            <td class="td-doctor">@pat.NationalId</td>
+                                            <td>
+                                                <span style="background:var(--teal-light); color:var(--teal-dark); padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600;">
+                                                    @(pat.MedicalRecord?.BloodType ?? "—")
+                                                </span>
+                                            </td>
+                                            <td class="td-doctor">@(pat.Phone ?? "—")</td>
+                                            <td class="td-doctor">@(pat.Email ?? "—")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+
+        </div>
+
+    </main>
+    <!-- Edit Doctor Modal -->
+    <div id="editDoctorModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; border-radius:20px; padding:36px; width:500px; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--teal-dark); margin-bottom:20px;">Edit Doctor</h3>
+            <form asp-action="EditDoctor" asp-controller="Admin" method="post">
+                <input type="hidden" name="Id" id="editDocId" />
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" name="FullName" id="editDocName" required />
+                    </div>
+                    <div class="input-group">
+                        <label>Specialty</label>
+                        <select name="Specialty" id="editDocSpecialty">
+                            <option>General Practice</option>
+                            <option>Cardiology</option>
+                            <option>Orthopedics</option>
+                            <option>Pediatrics</option>
+                            <option>Neurology</option>
+                            <option>Dermatology</option>
+                            <option>Surgery</option>
+                            <option>Internal Medicine</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>License Number</label>
+                        <input type="text" name="LicenseNumber" id="editDocLicense" />
+                    </div>
+                    <div class="input-group">
+                        <label>New Password (optional)</label>
+                        <input type="password" name="Password" placeholder="Leave empty to keep" />
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                    <button type="button" onclick="closeEditModal('editDoctorModal')"
+                            style="padding:10px 20px; border-radius:10px; border:2px solid var(--border); background:transparent; cursor:pointer;">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px;">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function openEditModal(id, name, specialty, license) {
+            document.getElementById('editDocId').value = id;
+            document.getElementById('editDocName').value = name;
+            document.getElementById('editDocLicense').value = license;
+            var sel = document.getElementById('editDocSpecialty');
+            for (var i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].value === specialty) sel.selectedIndex = i;
+            }
+            var modal = document.getElementById('editDoctorModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeEditModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+    </script>
+}

@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HealthMSR</title>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Playball&family=Cormorant+Garamond:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+</head>
+
+<body>
+
+    <button id="darkToggle" onclick="toggleDark()"
+            style="position:fixed; bottom:24px; right:24px; width:48px; height:48px;
+        border-radius:50%; border:2px solid var(--teal);
+        background:var(--white);
+        cursor:pointer; font-size:1.3rem;
+        z-index:9999;
+        box-shadow:0 4px 20px rgba(14,165,233,0.2);
+        transition:0.3s;">
+        🌙
+    </button>
+
+    @RenderBody()
+
+    <!-- National ID Validation -->
+    <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('input[name="searchId"]').forEach(function (input) {
+
+                    input.addEventListener('input', function () {
+                        this.value = this.value.replace(/\D/g, '').substring(0, 14);
+                    });
+
+                    var form = input.closest('form');
+
+                    if (form) {
+                        form.addEventListener('submit', function (e) {
+
+                            if (input.value.length !== 14) {
+                                e.preventDefault();
+                                alert('National ID must be exactly 14 digits.');
+                                input.focus();
+                            }
+
+                        });
+                    }
+
+                });
+            });
+    </script>
+
+    <!-- Enter Key -->
+    <script>
+            document.addEventListener('keydown', function (e) {
+
+                if (e.key === 'Enter') {
+
+                    var modal = document.querySelector('.overlay[style*="flex"]');
+
+                    if (modal) {
+
+                        var btn = modal.querySelector('button[type="submit"], .btn-primary');
+
+                        if (btn)
+                            btn.click();
+                    }
+
+                }
+
+            });
+    </script>
+
+    <!-- Dark Mode -->
+    <script>
+            function toggleDark() {
+
+                document.body.classList.toggle('dark-mode');
+
+                var btn = document.getElementById('darkToggle');
+
+                btn.textContent =
+                    document.body.classList.contains('dark-mode')
+                        ? '☀️'
+                        : '🌙';
+
+                localStorage.setItem(
+                    'darkMode',
+                    document.body.classList.contains('dark-mode')
+                );
+            }
+
+            window.addEventListener('DOMContentLoaded', function () {
+
+                if (localStorage.getItem('darkMode') === 'true') {
+
+                    document.body.classList.add('dark-mode');
+
+                    var btn = document.getElementById('darkToggle');
+
+                    if (btn)
+                        btn.textContent = '☀️';
+                }
+
+            });
+    </script>
+
+    <!-- Print Radiology Report -->
+    @* <script>
+            function printScan(scanType, result, notes, imageUrl, patientName, nationalId) {
+
+                var win = window.open('', '_blank');
+
+                var imgContent = imageUrl.endsWith('.pdf')
+                    ? `<a href="${imageUrl}" style="color:#0369a1;">Open PDF: ${imageUrl}</a>`
+                    : `<img src="${imageUrl}" style="max-width:100%; border-radius:8px; margin-top:16px;" />`;
+
+                win.document.write(`
+                    <html>
+                    <head>
+                        <title>Radiology Report</title>
+
+                        <style>
+                            body{
+                                font-family:sans-serif;
+                                padding:40px;
+                                color:#0f172a;
+                            }
+
+                            h1{
+                                color:#0369a1;
+                                font-size:1.8rem;
+                                margin-bottom:8px;
+                            }
+
+                            .label{
+                                font-size:.75rem;
+                                font-weight:700;
+                                color:#64748b;
+                                text-transform:uppercase;
+                                letter-spacing:1px;
+                                margin-top:16px;
+                            }
+
+                            .value{
+                                font-size:1.1rem;
+                                font-weight:600;
+                                margin-top:4px;
+                            }
+
+                            hr{
+                                border:1px solid #e2e8f0;
+                                margin:20px 0;
+                            }
+                        </style>
+
+                    </head>
+
+                    <body>
+
+                        <h1>HealthMSR — Radiology Report</h1>
+
+                        <hr/>
+
+                        <div class="label">Patient Name</div>
+                        <div class="value">${patientName}</div>
+
+                        <div class="label">National ID</div>
+                        <div class="value">${nationalId}</div>
+
+                        <div class="label">Scan Type</div>
+                        <div class="value">${scanType}</div>
+
+                        <div class="label">Result</div>
+                        <div class="value">${result || '—'}</div>
+
+                        <div class="label">Notes</div>
+                        <div class="value">${notes || '—'}</div>
+
+                        <hr/>
+
+                        ${imgContent}
+
+                    </body>
+                    </html>
+                `);
+
+                win.document.close();
+                win.print();
+            }
+    </script> *@
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
