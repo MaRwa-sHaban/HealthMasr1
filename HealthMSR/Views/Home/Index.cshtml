@@ -2,41 +2,53 @@
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="landing-wrap" id="app" dir="ltr">
 
     <!-- Navbar -->
     <header class="navbar">
-        <div class="logo-container">
-            <div>
+        <div>
                 <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
                 @* <img src="/images/logo.png" alt="HealthMSR" style="height:45px;" /> *@
             </div>
-        </div>
         <div style="display:flex; gap:10px; align-items:center;">
             <button class="nav-btn lang-btn" onclick="toggleLang()" id="langBtn">عربي</button>
-            <button class="nav-btn login-btn" onclick="document.getElementById('roleModal').style.display='flex'">
+            <button class="nav-btn login-btn"
+                    onclick="document.getElementById('roleModal').style.display='flex'">
                 <span data-en="Login" data-ar="دخول">Login</span>
             </button>
         </div>
     </header>
 
+    <!-- Hero -->
     <h1 class="hero-title">
-        <span data-en="Your Health, Beautifully Managed" data-ar="صحتك، تدار بجمال واحترافية">
+        <span data-en="Your Health, Beautifully Managed"
+              data-ar="صحتك، تدار بجمال واحترافية">
             Your Health, Beautifully Managed
         </span>
     </h1>
 
+    <p style="text-align:center; font-size:1.1rem; color:var(--gray); margin:-20px 0 40px; font-family:'Plus Jakarta Sans',sans-serif;">
+        <span data-en="Egypt's unified electronic health records platform — connecting patients, doctors, pharmacies, labs, and radiology centers."
+              data-ar="منصة مصر الموحدة للسجلات الطبية الإلكترونية — تربط المرضى والأطباء والصيدليات والمعامل ومراكز الأشعة.">
+            Egypt's unified electronic health records platform — connecting patients, doctors, pharmacies, labs, and radiology centers.
+        </span>
+    </p>
+
+    <!-- Services -->
     <div class="services-container">
         <div class="service-card">
             <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500" alt="Doctor">
-            <div class="card-label"><span data-en="Doctor Clinic" data-ar=" الطبيب">Doctor</span></div>
+            <div class="card-label">
+                <span data-en="Doctor Clinic" data-ar="عيادة الطبيب">Doctor Clinic</span>
+            </div>
         </div>
         <div class="service-card">
             <img src="https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=500" alt="Pharmacy">
-            <div class="card-label"><span data-en="E-Pharmacy" data-ar="الصيدلية الذكية">E-Pharmacy</span></div>
+            <div class="card-label">
+                <span data-en="E-Pharmacy" data-ar="الصيدلية الذكية">E-Pharmacy</span>
+            </div>
         </div>
-        <div class="service-card">
+         <div class="service-card">
             <img src="~/images/labimage.jpg" alt="Labs">
             <div class="card-label"><span data-en="Smart Labs" data-ar="معامل ذكية">Smart Labs</span></div>
         </div>
@@ -46,9 +58,218 @@
         </div>
         <div class="service-card">
             <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500" alt="History">
-            <div class="card-label"><span data-en="Patient History" data-ar="سجل المريض">Patient History</span></div>
+            <div class="card-label">
+                <span data-en="Patient History" data-ar="سجل المريض">Patient History</span>
+            </div>
         </div>
     </div>
+
+    <!-- Stats Section -->
+    <div style="background:linear-gradient(135deg,#0f172a,#0369a1); padding:60px 10%; margin-top:80px; text-align:center;">
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:40px; max-width:1000px; margin:0 auto;">
+            <div>
+                <div style="font-family:'Playball',cursive; font-size:3rem; color:#38bdf8;">6</div>
+                <div style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-top:6px;">
+                    <span data-en="User Roles" data-ar="أدوار المستخدمين">User Roles</span>
+                </div>
+            </div>
+            <div>
+                <div style="font-family:'Playball',cursive; font-size:3rem; color:#38bdf8;">100%</div>
+                <div style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-top:6px;">
+                    <span data-en="Digital Records" data-ar="سجلات رقمية">Digital Records</span>
+                </div>
+            </div>
+            <div>
+                <div style="font-family:'Playball',cursive; font-size:3rem; color:#38bdf8;">24/7</div>
+                <div style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-top:6px;">
+                    <span data-en="System Access" data-ar="وصول مستمر">System Access</span>
+                </div>
+            </div>
+            <div>
+                <div style="font-family:'Playball',cursive; font-size:3rem; color:#38bdf8;">🔒</div>
+                <div style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-top:6px;">
+                    <span data-en="Secure & Private" data-ar="آمن وخاص">Secure & Private</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div style="padding:80px 10%; text-align:center;">
+        <h2 style="font-family:'Playball',cursive; font-size:2.8rem; color:var(--teal-dark); margin-bottom:12px;">
+            <span data-en="How It Works" data-ar="كيف يعمل النظام">How It Works</span>
+        </h2>
+        <p style="color:var(--gray); margin-bottom:50px;">
+            <span data-en="Simple steps to manage your health digitally"
+                  data-ar="خطوات بسيطة لإدارة صحتك رقمياً">
+                Simple steps to manage your health digitally
+            </span>
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:30px;">
+            @foreach (var step in new[] {
+                new { Num="01", Icon="🏥", En="Register", Ar="سجّل حسابك", DescEn="Create your account with your National ID", DescAr="أنشئ حسابك برقمك القومي" },
+                new { Num="02", Icon="👨‍⚕️", En="Visit Doctor", Ar="زر طبيبك", DescEn="Doctor records your diagnosis and prescriptions", DescAr="الطبيب يسجل تشخيصك وروشتتك" },
+                new { Num="03", Icon="💊", En="Get Medication", Ar="احصل على دوائك", DescEn="Pharmacist dispenses your prescription digitally", DescAr="الصيدلي يصرف روشتتك إلكترونياً" },
+                new { Num="04", Icon="📋", En="Track History", Ar="تابع سجلك", DescEn="View all your medical history anytime", DescAr="اطّلع على سجلك الطبي الكامل" }
+            })
+            {
+                <div style="background:white; border-radius:20px; padding:30px 20px; box-shadow:0 8px 32px rgba(14,165,233,0.08); border-top:4px solid var(--teal); transition:0.3s;"
+                     onmouseover="this.style.transform='translateY(-8px)'"
+                     onmouseout="this.style.transform='translateY(0)'">
+                    <div style="font-family:'Playball',cursive; font-size:1rem; color:var(--teal); margin-bottom:12px;">@step.Num</div>
+                    <div style="font-size:2.5rem; margin-bottom:12px;">@step.Icon</div>
+                    <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--dark); margin-bottom:10px;">
+                        <span data-en="@step.En" data-ar="@step.Ar">@step.En</span>
+                    </h3>
+                    <p style="font-size:0.88rem; color:var(--gray); line-height:1.6;">
+                        <span data-en="@step.DescEn" data-ar="@step.DescAr">@step.DescEn</span>
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div style="padding:80px 10%; background:#f0f9ff;">
+        <h2 style="font-family:'Playball',cursive; font-size:2.8rem; color:var(--teal-dark); text-align:center; margin-bottom:12px;">
+            <span data-en="Frequently Asked Questions" data-ar="الأسئلة الشائعة">Frequently Asked Questions</span>
+        </h2>
+        <p style="color:var(--gray); text-align:center; margin-bottom:50px;">
+            <span data-en="Everything you need to know about HealthMSR"
+                  data-ar="كل ما تحتاج معرفته عن HealthMSR">
+                Everything you need to know about HealthMSR
+            </span>
+        </p>
+
+        <div style="max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:16px;">
+            @foreach (var faq in new[] {
+                new {
+                    Q_En = "What is HealthMSR?",
+                    Q_Ar = "ما هو نظام HealthMSR؟",
+                    A_En = "HealthMSR is Egypt's unified electronic health records platform that connects patients, doctors, pharmacies, laboratories, and radiology centers in one secure digital ecosystem.",
+                    A_Ar = "HealthMSR هو منصة مصر الموحدة للسجلات الطبية الإلكترونية التي تربط المرضى والأطباء والصيدليات والمعامل ومراكز الأشعة في منظومة رقمية آمنة واحدة."
+                },
+                new {
+                    Q_En = "Who can use HealthMSR?",
+                    Q_Ar = "من يمكنه استخدام HealthMSR؟",
+                    A_En = "The system supports 6 roles: Patients, Doctors, Pharmacists, Lab Technicians, Radiologists, and Administrators. Each role has its own dedicated dashboard.",
+                    A_Ar = "يدعم النظام 6 أدوار: المرضى، الأطباء، الصيادلة، أخصائيو المعامل، أخصائيو الأشعة، والمسؤولون. لكل دور لوحة تحكم خاصة به."
+                },
+                new {
+                    Q_En = "Is my medical data secure?",
+                    Q_Ar = "هل بياناتي الطبية آمنة؟",
+                    A_En = "Yes. Each user can only access data relevant to their role. Patients can only view their own records, and no cross-role data access is permitted without authorization.",
+                    A_Ar = "نعم. كل مستخدم يمكنه الوصول فقط للبيانات المتعلقة بدوره. المرضى يرون سجلاتهم فقط، ولا يُسمح بأي وصول عبر الأدوار دون تفويض."
+                },
+                new {
+                    Q_En = "How do I get my prescription from the pharmacy?",
+                    Q_Ar = "كيف أحصل على دوائي من الصيدلية؟",
+                    A_En = "Once your doctor writes a digital prescription, it automatically appears in the pharmacy system. The pharmacist can dispense it after verifying your National ID.",
+                    A_Ar = "بمجرد كتابة طبيبك للروشتة الرقمية، تظهر تلقائياً في نظام الصيدلية. يمكن للصيدلي صرفها بعد التحقق من رقمك القومي."
+                },
+                new {
+                    Q_En = "Can I view my lab results and radiology scans?",
+                    Q_Ar = "هل يمكنني رؤية نتائج تحاليلي وأشعتي؟",
+                    A_En = "Yes. Once the lab or radiology center uploads your results, they are instantly available in your patient dashboard under Lab Results and Radiology sections.",
+                    A_Ar = "نعم. بمجرد رفع المعمل أو مركز الأشعة لنتائجك، تصبح متاحة فوراً في لوحة تحكم المريض تحت قسمي التحاليل والأشعة."
+                },
+                new {
+                    Q_En = "How do I register in the system?",
+                    Q_Ar = "كيف أسجل في النظام؟",
+                    A_En = "Click Login, select your role, then click Create Account. Fill in your National ID and personal details. Medical staff must also upload their license documents for verification.",
+                    A_Ar = "اضغط دخول، اختر دورك، ثم اضغط إنشاء حساب. أدخل رقمك القومي وبياناتك الشخصية. يجب على الطاقم الطبي رفع وثائق الترخيص للتحقق."
+                }
+            })
+            {
+                <div class="faq-item"
+                     style="background:white; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(14,165,233,0.06);">
+                    <button onclick="toggleFaq(this)"
+                            style="width:100%; padding:22px 28px; background:none; border:none; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Plus Jakarta Sans',sans-serif;">
+                        <span style="font-size:1rem; font-weight:600; color:var(--dark);">
+                            <span data-en="@faq.Q_En" data-ar="@faq.Q_Ar">@faq.Q_En</span>
+                        </span>
+                        <span class="faq-icon" style="font-size:1.4rem; color:var(--teal); transition:0.3s; flex-shrink:0; margin-left:16px;">+</span>
+                    </button>
+                    <div class="faq-answer" style="display:none; padding:0 28px 22px;">
+                        <p style="color:var(--gray); line-height:1.7; font-size:0.95rem; border-top:1px solid var(--border); padding-top:16px;">
+                            <span data-en="@faq.A_En" data-ar="@faq.A_Ar">@faq.A_En</span>
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div style="padding:80px 10%; background:white;">
+        <h2 style="font-family:'Playball',cursive; font-size:2.8rem; color:var(--teal-dark); text-align:center; margin-bottom:12px;">
+            <span data-en="Contact Us" data-ar="تواصل معنا">Contact Us</span>
+        </h2>
+        <p style="color:var(--gray); text-align:center; margin-bottom:50px;">
+            <span data-en="We're here to help" data-ar="نحن هنا للمساعدة">We're here to help</span>
+        </p>
+
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:30px; max-width:900px; margin:0 auto 50px;">
+            <div style="text-align:center; padding:30px; background:var(--teal-light); border-radius:20px; border:1px solid var(--teal);">
+                <div style="font-size:2.5rem; margin-bottom:12px;">📍</div>
+                <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--teal-dark); margin-bottom:8px;">
+                    <span data-en="Address" data-ar="العنوان">Address</span>
+                </h3>
+                <p style="font-size:0.88rem; color:var(--gray);">Cairo, Egypt</p>
+            </div>
+            <div style="text-align:center; padding:30px; background:var(--teal-light); border-radius:20px; border:1px solid var(--teal);">
+                <div style="font-size:2.5rem; margin-bottom:12px;">📧</div>
+                <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--teal-dark); margin-bottom:8px;">Email</h3>
+                <p style="font-size:0.88rem; color:var(--gray);">support@healthmsr.eg</p>
+            </div>
+            <div style="text-align:center; padding:30px; background:var(--teal-light); border-radius:20px; border:1px solid var(--teal);">
+                <div style="font-size:2.5rem; margin-bottom:12px;">📞</div>
+                <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--teal-dark); margin-bottom:8px;">
+                    <span data-en="Phone" data-ar="الهاتف">Phone</span>
+                </h3>
+                <p style="font-size:0.88rem; color:var(--gray);">+20 100 000 0000</p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div style="max-width:600px; margin:0 auto; background:#f0f9ff; border-radius:24px; padding:40px; border:1px solid var(--teal-light);">
+            <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--teal-dark); text-align:center; margin-bottom:24px;">
+                <span data-en="Send a Message" data-ar="أرسل رسالة">Send a Message</span>
+            </h3>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+                <div class="input-group">
+                    <label><span data-en="Your Name" data-ar="اسمك">Your Name</span></label>
+                    <input type="text" placeholder="Full name" />
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="your@email.com" />
+                </div>
+                <div class="input-group">
+                    <label><span data-en="Message" data-ar="الرسالة">Message</span></label>
+                    <textarea rows="4" placeholder="How can we help you?"
+                              style="padding:13px 16px; border-radius:12px; border:2px solid var(--border); font-family:'Plus Jakarta Sans',sans-serif; font-size:0.95rem; resize:vertical; outline:none; width:100%;"></textarea>
+                </div>
+                <button class="btn-primary">
+                    <span data-en="Send Message" data-ar="إرسال">Send Message</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background:#0f172a; padding:40px 10%; color:rgba(255,255,255,0.6); text-align:center;">
+        <div style="margin-bottom:16px;">
+            <img src="/images/logo.png" alt="HealthMSR" style="height:40px; filter:brightness(0) invert(1); opacity:0.8;" />
+        </div>
+        <p style="font-size:0.88rem; margin-bottom:8px;">
+            <span data-en="Egypt's Unified Electronic Health Records Platform"
+                  data-ar="منصة مصر الموحدة للسجلات الطبية الإلكترونية">
+                Egypt's Unified Electronic Health Records Platform
+            </span>
+        </p>
+        <p style="font-size:0.82rem;">© 2026 HealthMSR. All rights reserved.</p>
+    </footer>
 </div>
 
 <!-- Role Modal -->
@@ -59,21 +280,27 @@
         </h2>
         <div class="role-grid">
             <button class="role-item" onclick="selectRole('Patient')">
+                <div style="font-size:1.5rem; margin-bottom:4px;">👤</div>
                 <span data-en="Patient" data-ar="مريض">Patient</span>
             </button>
             <button class="role-item" onclick="selectRole('Doctor')">
+                <div style="font-size:1.5rem; margin-bottom:4px;">👨‍⚕️</div>
                 <span data-en="Doctor" data-ar="دكتور">Doctor</span>
             </button>
             <button class="role-item" onclick="selectRole('Pharmacy')">
-                <span data-en="Pharmacy" data-ar="صيدلي">Pharmacy</span>
+                <div style="font-size:1.5rem; margin-bottom:4px;">💊</div>
+                <span data-en="Pharmacist" data-ar="صيدلي">Pharmacist</span>
             </button>
             <button class="role-item" onclick="selectRole('Lab')">
+                <div style="font-size:1.5rem; margin-bottom:4px;">🧪</div>
                 <span data-en="Lab" data-ar="معمل">Lab</span>
             </button>
             <button class="role-item" onclick="selectRole('Radiology')">
+                <div style="font-size:1.5rem; margin-bottom:4px;">🩻</div>
                 <span data-en="Radiology" data-ar="أشعة">Radiology</span>
             </button>
             <button class="role-item" onclick="selectRole('Admin')">
+                <div style="font-size:1.5rem; margin-bottom:4px;">🛠️</div>
                 <span data-en="Admin" data-ar="مدير">Admin</span>
             </button>
         </div>
@@ -84,9 +311,10 @@
 <div id="loginModal" class="overlay" style="display:none;" onclick="closeModal('loginModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
         <div style="text-align:center; margin-bottom:20px;">
-            <span class="logo-part1">Health</span><span class="logo-part2">MSR</span>
+            <img src="/images/logo.png" alt="HealthMSR" style="height:44px;" />
         </div>
-        <h2 class="auth-title" id="loginTitle">Patient Login</h2>
+        <h2 class="auth-title" id="loginTitle">Login</h2>
+        <p class="auth-sub" id="loginRole"></p>
 
         <form action="/Auth/Login" method="post">
             <input type="hidden" name="Role" id="roleInput" />
@@ -103,16 +331,13 @@
                        placeholder="Enter your password" required />
             </div>
 
-            <!-- <div style="text-align:right; margin-bottom:16px;">
-                <a href="#" style="color:var(--teal-dark); font-size:0.85rem; font-weight:600;">
+            <div style="text-align:right; margin-bottom:16px;">
+                <a href="/Auth/ForgotPassword"
+                   style="color:var(--teal-dark); font-size:0.85rem; font-weight:600;">
                     <span data-en="Forgot Password?" data-ar="نسيت كلمة المرور؟">Forgot Password?</span>
                 </a>
-            </div>-->
-            <div style="text-align:right; margin-bottom:16px;">
-                <a href="/Auth/ForgotPassword" style="color:var(--teal-dark); font-size:0.85rem; font-weight:600;">
-                    Forgot Password?
-                </a>
             </div>
+
             <button type="submit" class="btn-primary">
                 <span data-en="Login" data-ar="دخول">Login</span>
             </button>
@@ -120,14 +345,16 @@
 
         <div class="auth-link" style="margin-top:16px;">
             <span data-en="Don't have an account?" data-ar="مش عندك حساب؟">Don't have an account?</span>
-            <a href="#" onclick="goToRegister()" style="color:var(--teal-dark); font-weight:700;">
+            <a href="#" onclick="goToRegister()"
+               style="color:var(--teal-dark); font-weight:700; margin-left:4px;">
                 <span data-en="Create Account" data-ar="إنشاء حساب">Create Account</span>
             </a>
         </div>
 
         <div style="margin-top:12px; text-align:center;">
-            <a href="#" onclick="closeModal('loginModal'); document.getElementById('roleModal').style.display='flex';"
-                   style="color:var(--gray); font-size:0.85rem;">
+            <a href="#"
+               onclick="closeModal('loginModal'); document.getElementById('roleModal').style.display='flex';"
+               style="color:var(--gray); font-size:0.85rem;">
                 <span data-en="← Back" data-ar="← رجوع">← Back</span>
             </a>
         </div>
@@ -135,64 +362,68 @@
 </div>
 
 @section Scripts {
-    <style>
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
-            display: flex; justify-content: center; align-items: center; z-index: 9999;
-        }
+<style>
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    display: flex; justify-content: center; align-items: center; z-index: 9999;
+}
+.modal-card {
+    background: white; padding: 40px; border-radius: 28px;
+    width: 100%; max-width: 480px;
+    box-shadow: 0 24px 64px rgba(14,165,233,0.2);
+    max-height: 90vh; overflow-y: auto;
+}
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.role-item {
+    padding: 18px 14px; border-radius: 16px;
+    border: 2px solid var(--border);
+    background: #f8fafc; font-weight: 600;
+    font-size: 0.95rem; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: 0.3s; color: var(--dark);
+}
+.role-item:hover { background: var(--teal); color: white; border-color: var(--teal); }
+</style>
 
-        .modal-card {
-            background: white; padding: 40px; border-radius: 28px;
-            width: 100%; max-width: 480px;
-            box-shadow: 0 24px 64px rgba(14,165,233,0.2);
-        }
+<script>
+var isArabic = false;
+var selectedRole = '';
 
-        .role-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-        }
+function toggleLang() {
+    isArabic = !isArabic;
+    var dir = isArabic ? 'rtl' : 'ltr';
+    document.getElementById('app').setAttribute('dir', dir);
+    document.getElementById('langBtn').textContent = isArabic ? 'English' : 'عربي';
+    document.querySelectorAll('[data-en]').forEach(function(el) {
+        el.textContent = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    });
+}
 
-        .role-item {
-            padding: 18px; border-radius: 16px;
-            border: 2px solid var(--border);
-            background: #f8fafc; font-weight: 600;
-            font-size: 1rem; cursor: pointer;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: 0.3s; color: var(--dark);
-        }
+function selectRole(role) {
+    selectedRole = role;
+    document.getElementById('roleInput').value = role;
+    document.getElementById('loginTitle').textContent = role + ' Login';
+    document.getElementById('loginRole').textContent = role;
+    document.getElementById('roleModal').style.display = 'none';
+    document.getElementById('loginModal').style.display = 'flex';
+}
 
-        .role-item:hover { background: var(--teal); color: white; border-color: var(--teal); }
-    </style>
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
 
-    <script>
-        var isArabic = false;
-        var selectedRole = '';
+function goToRegister() {
+    window.location.href = '/Auth/Register?role=' + selectedRole;
+}
 
-        function toggleLang() {
-            isArabic = !isArabic;
-            var dir = isArabic ? 'rtl' : 'ltr';
-            document.getElementById('app').setAttribute('dir', dir);
-            document.getElementById('langBtn').textContent = isArabic ? 'English' : 'عربي';
-
-            document.querySelectorAll('[data-en]').forEach(function(el) {
-                el.textContent = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
-            });
-        }
-
-        function selectRole(role) {
-            selectedRole = role;
-            document.getElementById('roleInput').value = role;
-            document.getElementById('loginTitle').textContent = role + ' Login';
-            document.getElementById('roleModal').style.display = 'none';
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function goToRegister() {
-            window.location.href = '/Auth/Register?role=' + selectedRole;
-        }
-    </script>
+function toggleFaq(btn) {
+    var answer = btn.nextElementSibling;
+    var icon = btn.querySelector('.faq-icon');
+    var isOpen = answer.style.display === 'block';
+    answer.style.display = isOpen ? 'none' : 'block';
+    icon.textContent = isOpen ? '+' : '×';
+    icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(45deg)';
+}
+</script>
 }
