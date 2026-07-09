@@ -39,13 +39,13 @@ namespace HealthMSR.Controllers
                     d.PharmacistId == pharmacistId.Value &&
                     d.DispenseDate.Date == today),
 
-                //PendingPrescriptions = pending.Select(p => new PendingPrescriptionItem
-                //{
-                //    Prescription = p,
-                //    PatientName = $"{p.Encounter?.Patient?.FirstName} {p.Encounter?.Patient?.LastName}",
-                //    PatientNationalId = p.Encounter?.Patient?.NationalId,
-                //    PatientId = p.Encounter?.PatientId ?? 0
-                //}).ToList(),
+                PendingPrescriptions = pending.Select(p => new HealthMSR.ViewModels.PendingPrescriptionItem
+                {
+                    Prescription = p,
+                    PatientName = $"{p.Encounter?.Patient?.FirstName} {p.Encounter?.Patient?.LastName}",
+                    PatientNationalId = p.Encounter?.Patient?.NationalId,
+                    PatientId = p.Encounter?.PatientId ?? 0
+                }).ToList(),
 
                 DispensedPrescriptions = dispensed.Select(d => new DispensedPrescriptionItem
                 {

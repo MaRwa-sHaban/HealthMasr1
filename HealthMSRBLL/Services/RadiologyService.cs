@@ -9,11 +9,11 @@ namespace HealthMSR.BLL.Services
         private readonly AppDbContext _db;
         public RadiologyService(AppDbContext db) { _db = db; }
 
-        public int CountCompletedToday()
-        {
-            throw new NotImplementedException();
-        }
-
+        public int CountCompletedToday() =>
+      _db.Radiology_Reports
+          .Count(r => r.Status == "Ready" &&
+                 r.ResultDate.HasValue &&
+                 r.ResultDate.Value.Date == DateTime.Today);
         public Radiologist GetById(int id) => _db.Radiologists.Find(id);
 
         public List<Radiology_Report> GetPendingRequests() =>
