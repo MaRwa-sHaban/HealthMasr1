@@ -182,7 +182,7 @@
                         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:16px;">
                             <div class="input-group">
                                 <label>Full Name</label>
-                                <input type="text" name="FullName" placeholder="Dr. Ahmed Mohamed" required />
+                                <input type="text" name="FullName" placeholder="Dr. Hager Mahmoud" required />
                             </div>
                             <div class="input-group">
                                 <label>National ID</label>
@@ -210,7 +210,7 @@
                             </div>
                             <div class="input-group">
                                 <label>Email</label>
-                                <input type="email" name="Email" placeholder="email@example.com" />
+                                <input type="email" name="Email" required placeholder="email@example.com" />
                             </div>
                             <div class="input-group">
                                 <label>License Number</label>
@@ -259,6 +259,7 @@
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Specialty</th>
+                                        <th>National Id</th>
                                         <th>License</th>
                                         <th>Organization</th>
                                         <th>Action</th>
@@ -276,6 +277,7 @@
                                                     @doc.Specialty
                                                 </span>
                                             </td>
+                                            <td class="td-doctor">@doc.NationalId</td>
                                             <td class="td-doctor">@doc.LicenseNumber</td>
                                             <td class="td-doctor">@doc.Organization?.Name</td>
                                             <td>
@@ -312,7 +314,7 @@
                         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:16px;">
                             <div class="input-group">
                                 <label>Full Name</label>
-                                <input type="text" name="Name" placeholder="Full name" required />
+                                <input type="text" name="Name" placeholder="pharmacist Marwa Shaban" required />
                             </div>
                             <div class="input-group">
                                 <label>National ID</label>
@@ -350,6 +352,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>National Id</th>
                                     <th>Phone</th>
                                     <th>Email</th>
                                     <th>Actions</th>
@@ -360,6 +363,7 @@
                                 {
                                     <tr>
                                         <td style="font-family:'Cormorant Garamond',serif; font-weight:600;">@ph.Name</td>
+                                        <td class="td-doctor">@ph.NationalId</td>
                                         <td class="td-doctor">@ph.Phone</td>
                                         <td class="td-doctor">@(ph.Email ?? "—")</td>
                                         <td>
@@ -480,6 +484,7 @@
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Speciality</th>
+                                        <th>National ID</th>
                                         <th>Phone</th>
                                         <th>Email</th>
                                         <th>Action</th>
@@ -496,6 +501,7 @@
                                                     @lt.Speciality
                                                 </span>
                                             </td>
+                                            <td class="td-doctor">@lt.NationalId</td>
                                             <td class="td-doctor">@lt.Phone</td>
                                             <td class="td-doctor">@(lt.Email ?? "—")</td>
                                             <td>

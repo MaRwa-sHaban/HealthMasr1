@@ -54,6 +54,7 @@ namespace HealthMSR.Controllers
                 LicenseNumber = f["LicenseNumber"],
                 NationalId = f["NationalId"],
                 Password = f["Password"],
+                Email = f["Email"],
                 OrganizationId = int.Parse(f["OrganizationId"])
             });
             return RedirectToAction("Dashboard", new { section = "doctors" });
