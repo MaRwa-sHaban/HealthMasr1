@@ -27,11 +27,27 @@ namespace HealthMSR.BLL.Services
                     .ThenInclude(e => e.RadiologyReports)
                 .FirstOrDefault(p => p.PatientId == id);
 
+        //public Patient GetByNationalId(string nationalId) =>
+        //    _db.Patients
+        //        .Include(p => p.MedicalRecord)
+        //        .FirstOrDefault(p => p.NationalId == nationalId);
         public Patient GetByNationalId(string nationalId) =>
-            _db.Patients
-                .Include(p => p.MedicalRecord)
-                .FirstOrDefault(p => p.NationalId == nationalId);
-
+    _db.Patients
+        .Include(p => p.MedicalRecord)
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.Doctor)
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.Prescriptions)
+                .ThenInclude(p => p.Items)
+                    .ThenInclude(i => i.Medication)
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.Prescriptions)
+                .ThenInclude(p => p.Dispenses)
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.LabReports)
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.RadiologyReports)
+        .FirstOrDefault(p => p.NationalId == nationalId);
         public Patient Register(Patient patient, string bloodType)
         {
             _db.Patients.Add(patient);

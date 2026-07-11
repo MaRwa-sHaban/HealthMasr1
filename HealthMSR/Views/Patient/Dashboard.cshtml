@@ -227,87 +227,99 @@
                     }
                     else
                     {
-                        <div style="overflow-x:auto;">
-                            <table class="rec-table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Doctor</th>
-                                        <th>Diagnosis</th>
-                                        <th>Prescription</th>
-                                        <th>Labs</th>
-                                        <th>Radiology</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var enc in Model.Encounters)
-                                    {
-                                        var rxList = Model.Prescriptions.Where(rx => rx.EncounterId == enc.EncounterId).ToList();
-                                        var labList = Model.LabReports.Where(l => l.EncounterId == enc.EncounterId).ToList();
-                                        var radList = Model.RadiologyReports.Where(r => r.EncounterId == enc.EncounterId).ToList();
-                                        <tr>
-                                            <td class="td-date">@enc.StartTime.ToString("yyyy-MM-dd")</td>
-                                            <td class="td-doctor">Dr. @enc.Doctor?.FullName</td>
-                                            <td class="td-diagnosis">@enc.Status</td>
-                                            <td>
-                                                @if (rxList.Any())
+                        <div class="timeline">
+                            @foreach (var enc in Model.Encounters)
+                            {
+                                var rxList = Model.Prescriptions.Where(r => r.EncounterId == enc.EncounterId).ToList();
+                                var labList = Model.LabReports.Where(l => l.EncounterId == enc.EncounterId).ToList();
+                                var radList = Model.RadiologyReports.Where(r => r.EncounterId == enc.EncounterId).ToList();
+
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-body">
+                                        <div class="timeline-date">@enc.StartTime.ToString("yyyy-MM-dd")</div>
+                                        <div class="timeline-title">@enc.Status</div>
+                                        <div class="timeline-sub">Dr. @enc.Doctor?.FullName</div>
+
+                                        @if (rxList.Any())
+                                        {
+                                            <div style="margin-top:10px; padding:10px 14px; background:#f0fdf4; border-radius:10px; border-left:3px solid #10b981;">
+                                                <div style="font-size:0.75rem; font-weight:700; color:#065f46; text-transform:uppercase; margin-bottom:6px;">💊 Prescriptions</div>
+                                                @foreach (var rx in rxList)
                                                 {
-                                                    @foreach (var rx in rxList)
-                                                    {
+                                                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
                                                         @foreach (var item in rx.Items)
                                                         {
-                                                            <span class="table-tag">💊 @item.Medication?.DrugName @item.Dosage</span>
+                                                            <span style="background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:500;">
+                                                                @item.Medication?.DrugName @item.Dosage — @item.Frequency
+                                                            </span>
                                                         }
-                                                    }
+                                                    </div>
+                                                    <div style="margin-top:6px;">
+                                                        <span class="status-badge @(rx.Dispenses.Any(d => d.Status == DispenseStatus.Dispensed) ? "completed" : "pending")" style="font-size:0.72rem;">
+                                                            @(rx.Dispenses.Any(d => d.Status == DispenseStatus.Dispensed) ? "Dispensed" : "Pending dispense")
+                                                        </span>
+                                                    </div>
                                                 }
-                                                else
-                                                {
-                                                    <span class="td-empty">—</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (labList.Any())
-                                                {
+                                            </div>
+                                        }
+
+                                        @if (labList.Any())
+                                        {
+                                            <div style="margin-top:8px; padding:10px 14px; background:#fffbeb; border-radius:10px; border-left:3px solid #f59e0b;">
+                                                <div style="font-size:0.75rem; font-weight:700; color:#92400e; text-transform:uppercase; margin-bottom:6px;">🧪 Lab Tests</div>
+                                                <div style="display:flex; flex-wrap:wrap; gap:6px;">
                                                     @foreach (var lab in labList)
                                                     {
-                                                        <div class="table-tag-lab">@lab.TestName</div>
-                                                        <div class="table-result">@lab.Results</div>
+                                                        <div style="background:#fef3c7; padding:6px 12px; border-radius:10px;">
+                                                            <span style="font-size:0.85rem; font-weight:600; color:#92400e;">@lab.TestName</span>
+                                                            @if (lab.Status == LabStatus.Completed)
+                                                            {
+                                                                <span style="display:block; font-size:0.78rem; color:#065f46; margin-top:2px;">✅ @lab.Results</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span style="display:block; font-size:0.75rem; color:#d97706; margin-top:2px;">⏳ Pending</span>
+                                                            }
+                                                        </div>
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    <span class="td-empty">—</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (radList.Any())
-                                                {
+                                                </div>
+                                            </div>
+                                        }
+
+                                        @if (radList.Any())
+                                        {
+                                            <div style="margin-top:8px; padding:10px 14px; background:#fdf4ff; border-radius:10px; border-left:3px solid #a21caf;">
+                                                <div style="font-size:0.75rem; font-weight:700; color:#86198f; text-transform:uppercase; margin-bottom:6px;">🩻 Radiology</div>
+                                                <div style="display:flex; flex-wrap:wrap; gap:6px;">
                                                     @foreach (var rad in radList)
                                                     {
-                                                        <div class="table-tag-rad">@rad.ScanType</div>
-                                                        <div class="table-result">@(rad.Result ?? "Pending")</div>
+                                                        <div style="background:#fae8ff; padding:6px 12px; border-radius:10px;">
+                                                            <span style="font-size:0.85rem; font-weight:600; color:#86198f;">@rad.ScanType</span>
+                                                            @if (rad.Status == "Ready")
+                                                            {
+                                                                <span style="display:block; font-size:0.78rem; color:#065f46; margin-top:2px;">✅ @rad.Result</span>
+                                                                @if (!string.IsNullOrEmpty(rad.ImageUrl))
+                                                                {
+                                                                    <a href="@rad.ImageUrl" target="_blank" style="display:inline-block; margin-top:4px; font-size:0.75rem; color:#0369a1; font-weight:600;">📄 View File</a>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <span style="display:block; font-size:0.75rem; color:#be185d; margin-top:2px;">⏳ Pending</span>
+                                                            }
+                                                        </div>
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    <span class="td-empty">—</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                <span class="status-badge @(enc.Status == "Completed" ? "completed" : "pending")">
-                                                    @enc.Status
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
                         </div>
                     }
                 </div>
             }
-
             @* ===== PRESCRIPTIONS ===== *@
             @if (Model.ActiveSection == "prescriptions")
             {
@@ -428,26 +440,32 @@
 
                                 @if (!string.IsNullOrEmpty(rad.ImageUrl))
                                 {
-                                    <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+                                    <div style="margin-top:10px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                                         @if (rad.ImageUrl.EndsWith(".pdf"))
                                         {
                                             <a href="@rad.ImageUrl" target="_blank"
-                                                   style="display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:10px; background:var(--teal-light); color:var(--teal-dark); text-decoration:none; font-weight:600; font-size:0.85rem;">
+                                                   style="display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:10px; background:var(--teal-light); color:var(--teal-dark); text-decoration:none; font-weight:600; font-size:0.85rem;">
                                                 📄 View PDF
                                             </a>
                                         }
                                         else
                                         {
                                             <img src="@rad.ImageUrl" alt="Scan"
-                                                 style="max-width:100%; max-height:300px; border-radius:12px; cursor:pointer; border:1px solid var(--border);"
+                                                 style="max-width:100%; max-height:250px; border-radius:12px; cursor:pointer; border:1px solid var(--border); margin-top:8px;"
                                                  onclick="window.open(this.src)" />
                                         }
-                                        <!-- Print Button -->
-                                        <button onclick="printScan('@rad.ScanType', '@rad.Result', '@rad.Notes', '@rad.ImageUrl', '@p.FirstName @p.LastName', '@p.NationalId')"
-                                                style="padding:8px 16px; border-radius:10px; border:2px solid var(--teal); background:transparent; color:var(--teal-dark); font-weight:600; cursor:pointer; font-size:0.85rem;">
-                                            🖨️ Print
+                                        <button onclick="printScan('@rad.ScanType', '@(rad.Result ?? "")', '@(rad.Notes ?? "")', '@(rad.ImageUrl ?? "")', '@p.FirstName @p.LastName', '@p.NationalId')"
+                                                style="display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:10px; border:2px solid var(--teal); background:transparent; color:var(--teal-dark); font-weight:600; cursor:pointer; font-size:0.85rem; font-family:'Plus Jakarta Sans',sans-serif;">
+                                            🖨️ Print Report
                                         </button>
                                     </div>
+                                }
+                                else if (rad.Status == "Ready")
+                                {
+                                    <button onclick="printScan('@rad.ScanType', '@(rad.Result ?? "")', '@(rad.Notes ?? "")', '', '@p.FirstName @p.LastName', '@p.NationalId')"
+                                            style="display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:10px; border:2px solid var(--teal); background:transparent; color:var(--teal-dark); font-weight:600; cursor:pointer; font-size:0.85rem; font-family:'Plus Jakarta Sans',sans-serif; margin-top:8px;">
+                                        🖨️ Print Report
+                                    </button>
                                 }
                             </div>
                         }

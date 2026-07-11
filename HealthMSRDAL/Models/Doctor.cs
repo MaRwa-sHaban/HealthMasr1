@@ -16,6 +16,6 @@ namespace HealthMSR.DAL.Models
         public Organization Organization { get; set; }
         public ICollection<Encounter> Encounters { get; set; } = new List<Encounter>();
         public ICollection<Observation> Observations { get; set; } = new List<Observation>();
-        public string Email { get; internal set; }
+        public string Email { get;  set; }
     }
 }

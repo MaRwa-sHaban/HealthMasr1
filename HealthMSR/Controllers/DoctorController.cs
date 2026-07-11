@@ -134,6 +134,66 @@ namespace HealthMSR.Controllers
             var patient = _doctorService.SearchPatientById(patientId);
             return RedirectToAction("Dashboard", new { section = "search", searchId = patient?.NationalId });
         }
+        [HttpPost]
+        public IActionResult SaveVisit(IFormCollection form)
+        {
+            var doctorId = HttpContext.Session.GetInt32("DoctorId");
+            if (doctorId == null) return RedirectToAction("Login", "Auth");
+
+            var patientId = int.Parse(form["PatientId"]);
+
+            // Medications
+            var medNames = form["medName"].ToList();
+            var medDosages = form["medDosage"].ToList();
+            var medFreqs = form["medFreq"].ToList();
+            var medDurations = form["medDuration"].ToList();
+
+            var medications = new List<MedicationItem>();
+            for (int i = 0; i < medNames.Count; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(medNames[i]))
+                {
+                    medications.Add(new MedicationItem
+                    {
+                        Name = medNames[i],
+                        Dosage = medDosages.ElementAtOrDefault(i) ?? "—",
+                        Frequency = medFreqs.ElementAtOrDefault(i) ?? "Once daily",
+                        Duration = medDurations.ElementAtOrDefault(i) ?? "7 days"
+                    });
+                }
+            }
+
+            // Lab Tests
+            var labTests = form["labTest"].Where(t => !string.IsNullOrWhiteSpace(t)).ToList();
+
+            // Radiology Scans
+            var radScans = form["radScan"].Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+
+            var model = new SaveVisitModel
+            {
+                PatientId = patientId,
+                DoctorId = doctorId.Value,
+                Diagnosis = form["Diagnosis"],
+                Notes = form["Notes"],
+                BP = form["BP"],
+                Sugar = form["Sugar"],
+                Temp = form["Temp"],
+                Pulse = form["Pulse"],
+                PrescriptionNotes = form["PrescriptionNotes"],
+                Medications = medications,
+                LabTests = labTests,
+                RadiologyScans = radScans
+            };
+
+            _doctorService.SaveVisit(model);
+
+            var patient = _doctorService.SearchPatientById(patientId);
+            return RedirectToAction("Dashboard", new
+            {
+                section = "search",
+                searchId = patient?.NationalId
+            });
+        }
 
         public IActionResult PatientProfile(int patientId)
         {

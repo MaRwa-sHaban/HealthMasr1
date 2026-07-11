@@ -315,10 +315,12 @@ namespace HealthMSR.Controllers
                     var doctor = new Doctor
                     {
                         FullName = fullName ?? string.Empty,
+                        Email = form["Email"].ToString(),
                         Specialty = !string.IsNullOrEmpty(form["Specialty"])
-          ? form["Specialty"].ToString() : "General Practice",
-                        NationalId = nationalId,           // ← الرقم القومي هنا
-                        LicenseNumber = form["LicenseNumber"].ToString() ?? string.Empty, // ← رخصة منفصلة
+            ? form["Specialty"].ToString()
+            : "General Practice",
+                        NationalId = nationalId,
+                        LicenseNumber = form["LicenseNumber"].ToString() ?? string.Empty,
                         OrganizationId = org.OrganizationId
                     };
 

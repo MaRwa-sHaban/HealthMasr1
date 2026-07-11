@@ -2,7 +2,7 @@
 //using HealthMSR.BLL.ViewModels;
 using HealthMSR.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Http;
 namespace HealthMSR.Controllers
 {
     public class RadiologyController : Controller
@@ -60,16 +60,38 @@ namespace HealthMSR.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadResult(int reportId, string result,
-            string notes, string patientNationalId, BLL.Services.IFormFile scanFile)
+        //public async Task<IActionResult> UploadResult(int reportId, string result,
+        //    string notes, string patientNationalId, BLL.Services.IFormFile scanFile)
+        //{
+        //    var radId = HttpContext.Session.GetInt32("RadiologistId");
+        //    if (radId == null) return RedirectToAction("Login", "Auth");
+
+        //    await _radiologyService.UploadResult(reportId, result, notes,
+        //        radId.Value, scanFile, _env.WebRootPath);
+
+        //    return RedirectToAction("Dashboard", new { section = "search", searchId = patientNationalId });
+        //}
+        public async Task<IActionResult> UploadResult(
+    int reportId,
+    string result,
+    string notes,
+    string patientNationalId,
+    IFormFile scanFile)
         {
             var radId = HttpContext.Session.GetInt32("RadiologistId");
-            if (radId == null) return RedirectToAction("Login", "Auth");
+            if (radId == null)
+                return RedirectToAction("Login", "Auth");
 
-            await _radiologyService.UploadResult(reportId, result, notes,
-                radId.Value, scanFile, _env.WebRootPath);
+            await _radiologyService.UploadResult(
+                reportId,
+                result,
+                notes,
+                radId.Value,
+                scanFile,
+                _env.WebRootPath);
 
-            return RedirectToAction("Dashboard", new { section = "search", searchId = patientNationalId });
+            return RedirectToAction("Dashboard",
+                new { section = "search", searchId = patientNationalId });
         }
     }
 }
