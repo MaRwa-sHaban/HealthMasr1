@@ -191,3 +191,7 @@ function removeRow(btn) {
     var row = btn.parentElement;
     if (row) row.remove();
 }
+function toggleSidebar() {
+    var sidebar = document.querySelector('.sidebar');
+    if (sidebar) sidebar.classList.toggle('open');
+}
